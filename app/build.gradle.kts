@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.pmdm.proyectobase2425"
+    namespace = "com.gym.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.pmdm.proyectobase2425"
+        applicationId = "com.gym.app"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -61,10 +61,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.material:material-icons-extended:1.6.8")
-
-    implementation(libs.pmdm.ies.balmis.components)
-    implementation(libs.pmdm.ies.balmis.utilities)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

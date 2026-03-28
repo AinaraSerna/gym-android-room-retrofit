@@ -12,30 +12,28 @@
         android:name="android.hardware.telephony"
         android:required="true" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-
+    -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    -->
 
     <application
-        android:name="com.base.App"
+        android:name="com.gym.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="Proyecto base"
+        android:label="Gym"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Proyectobase2425"
+        android:theme="@style/Theme.GymTheme"
         tools:targetApi="31">
         <activity
-            android:name="com.base.ui.views.MainActivity"
+            android:name="com.gym.ui.views.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Proyectobase2425">
+            android:theme="@style/Theme.GymTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
