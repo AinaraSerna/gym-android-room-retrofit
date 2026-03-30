@@ -10,17 +10,11 @@ import kotlinx.serialization.Serializable
 data object ScaffoldPrincipalRoute
 
 fun NavGraphBuilder.scaffoldPrincipalDestination(
-    onIrAPantallaB: (Int) -> Unit,
-    xVM:  XViewModel,
-    isDarkTheme: Boolean,
-    onThemeChange: (Boolean) -> Unit
+    onIrAPantallaB: (Int) -> Unit
 ) {
     composable<ScaffoldPrincipalRoute> {
         ScaffoldPrincipalScreen(
-            onIrPantallaB = onIrAPantallaB,
-            xVm = xVM,
-            isDarkTheme = isDarkTheme,
-            onThemeChange = onThemeChange
+            onIrPantallaB = onIrAPantallaB
         )
     }
 }

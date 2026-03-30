@@ -9,10 +9,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun ScaffoldPrincipalScreen(
-    onIrPantallaB: (Int) -> Unit,
-    xVm: XViewModel,
-    onThemeChange: (Boolean) -> Unit,
-    isDarkTheme: Boolean
+    onIrPantallaB: (Int) -> Unit
 ) {
     Scaffold() { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {

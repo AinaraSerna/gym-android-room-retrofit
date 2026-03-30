@@ -7,10 +7,7 @@ import com.gym.ui.features.x1.XViewModel
 
 @Composable
 fun NavHostPrincipal(
-    xVM: XViewModel,
-    navController: NavHostController,
-    isDarkTheme: Boolean,
-    onThemeChange: (Boolean) -> Unit
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -19,10 +16,7 @@ fun NavHostPrincipal(
         scaffoldPrincipalDestination(
             onIrAPantallaB = { id ->
                 navController.navigate(route = PantallaBRoute(id))
-            },
-            xVM = xVM,
-            isDarkTheme = isDarkTheme,
-            onThemeChange = onThemeChange,
+            }
         )
     }
 }

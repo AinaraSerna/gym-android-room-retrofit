@@ -1,0 +1,22 @@
+package com.gym.data.room.gym.sesiones
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.gym.data.room.gym.sesiones.SesionEntity
+
+@Dao
+interface SesionDao {
+    @Query(value = "SELECT * FROM sesiones")
+    suspend fun getAll(): List<SesionEntity>
+    @Query(value = "SELECT * FROM sesiones WHERE id = :id")
+    suspend fun getById(id: Int): SesionEntity
+    @Insert
+    suspend fun insert(sesionEntity: SesionEntity)
+    @Update
+    suspend fun update(sesionEntity: SesionEntity)
+    @Delete
+    suspend fun delete(sesionEntity: SesionEntity)
+}
