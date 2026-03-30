@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.gym.data.room.gym.ejercicios.EjercicioEntity
+import java.time.LocalDate
 import java.util.Date
 
 @Entity(
@@ -26,7 +27,7 @@ data class RegistroEntity(
     @ColumnInfo(name = "nombre_ejercicio")
     val nombreEjercicio: String,
     @ColumnInfo(name = "fecha")
-    val fecha: Date,
+    val fecha: LocalDate,
     @ColumnInfo(name = "serie")
     val serie: Int,
     @ColumnInfo(name = "peso")

@@ -1,7 +1,8 @@
-package com.gym.models
+package com.gym.models.repositorios
 
 import com.gym.data.Sesion
 import com.gym.data.room.gym.sesiones.SesionDao
+import com.gym.models.toSesionEntity
 import javax.inject.Inject
 
 class SesionRepository @Inject constructor(

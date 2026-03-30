@@ -1,7 +1,8 @@
-package com.gym.models
+package com.gym.models.repositorios
 
 import com.gym.data.Ejercicio
 import com.gym.data.room.gym.ejercicios.EjercicioDao
+import com.gym.models.toEjercicioEntity
 import javax.inject.Inject
 
 class EjercicioRepository @Inject constructor(

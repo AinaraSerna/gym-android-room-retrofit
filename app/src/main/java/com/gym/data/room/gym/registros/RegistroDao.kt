@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import java.util.Date
+import java.time.LocalDate
 
 @Dao
 interface RegistroDao {
@@ -14,7 +14,7 @@ interface RegistroDao {
     @Query(value = "SELECT * FROM registros WHERE id = :id")
     suspend fun getById(id: Int): RegistroEntity
     @Query(value = "SELECT * FROM registros WHERE fecha = :fecha")
-    suspend fun getByFecha(fecha: Date): List<RegistroEntity>
+    suspend fun getByFecha(fecha: LocalDate): List<RegistroEntity>
     @Insert
     suspend fun insert(registroEntity: RegistroEntity)
     @Update

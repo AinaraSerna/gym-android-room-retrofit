@@ -3,12 +3,12 @@ package com.gym.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.gym.data.room.gym.sesiones.SesionDao
-import com.gym.models.SesionRepository
+import com.gym.models.repositorios.SesionRepository
 import com.gym.data.room.GymBD
 import com.gym.data.room.gym.ejercicios.EjercicioDao
 import com.gym.data.room.gym.registros.RegistroDao
-import com.gym.models.EjercicioRepository
-import com.gym.models.RegistroRepository
+import com.gym.models.repositorios.EjercicioRepository
+import com.gym.models.repositorios.RegistroRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

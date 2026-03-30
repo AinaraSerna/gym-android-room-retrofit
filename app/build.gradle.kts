@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.gym.app"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.gym.app"
@@ -50,6 +50,10 @@ android {
         }
     }
 
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
