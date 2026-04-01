@@ -1,14 +1,13 @@
 package com.gym.ui.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -22,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.composables.BarraInferior
+import com.gym.ui.composables.BarraSuperior
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.ejercicios.EjerciciosRoute
 import com.gym.ui.navigation.ejercicios.detallesEjercicioDestination
@@ -38,16 +38,15 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
-import com.gym.ui.theme.RosaFucsia
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHostPrincipal(
     navController: NavHostController
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     val comportamientoAnteScroll = TopAppBarDefaults.pinnedScrollBehavior()
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     val entradaEnPilaDeNavegacionActuasState by navController.currentBackStackEntryAsState()
     val iOpcionNavegacionSeleccionada by remember {
         derivedStateOf {
@@ -63,14 +62,7 @@ fun NavHostPrincipal(
     }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Top App Bar provisional") },
-                scrollBehavior = comportamientoAnteScroll,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = RosaFucsia,
-                    titleContentColor = Color.White
-                )
-            )
+            BarraSuperior(comportamientoAnteScroll)
         },
         bottomBar = {
             BarraInferior(
@@ -78,35 +70,30 @@ fun NavHostPrincipal(
                 onNavegarAPantalla = { indice -> navegarAOpcion(navController, indice) }
             )
         },
-        floatingActionButton = { },
+        floatingActionButton = {},
         floatingActionButtonPosition = FabPosition.End,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         NavHost(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color.White),
             navController = navController,
-            startDestination = RegistrosRoute,
-            modifier = Modifier.padding(paddingValues).background(Color.White)
+            startDestination = RegistrosRoute
         ) {
-            // Pantallas principales (en bottom bar)
+            // Pantallas principales
             registrosDestination(
-                onIrAFormNuevosRegistros = {
-                    navController.navigate(route = FormNuevosRegistrosRoute)
-                }
+                onIrAFormNuevosRegistros = { navController.navigate(FormNuevosRegistrosRoute) }
             )
             historialDestination(
-                onIrAFormRegistrosPorFecha = {
-                    navController.navigate(route = FormRegistrosPorFechaRoute)
-                }
+                onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }
             )
             ejerciciosDestination(
-                onIrADetallesEjercicio = {
-                    navController.navigate(route = DetallesEjercicioRoute)
-                }
+                onIrADetallesEjercicio = { navController.navigate(DetallesEjercicioRoute) }
             )
             sesionesDestination(
-                onIrADetallesSesion = {
-                    navController.navigate(route = DetallesSesionRoute)
-                }
+                onIrADetallesSesion = { navController.navigate(DetallesSesionRoute) }
             )
 
             // Pantallas secundarias
