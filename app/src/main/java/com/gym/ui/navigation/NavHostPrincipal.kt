@@ -52,18 +52,20 @@ fun NavHostPrincipal(
     val comportamientoAnteScroll = TopAppBarDefaults.pinnedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
     val entradaEnPilaDeNavegacionActuasState by navController.currentBackStackEntryAsState()
+    
     val iOpcionNavegacionSeleccionada by remember {
         derivedStateOf {
+            val destino = entradaEnPilaDeNavegacionActuasState?.destination
             when {
-                entradaEnPilaDeNavegacionActuasState == null -> 0
-                entradaEnPilaDeNavegacionActuasState!!.destination.hasRoute<RegistrosRoute>() -> 0
-                entradaEnPilaDeNavegacionActuasState!!.destination.hasRoute<HistorialRoute>() -> 1
-                entradaEnPilaDeNavegacionActuasState!!.destination.hasRoute<EjerciciosRoute>() -> 2
-                entradaEnPilaDeNavegacionActuasState!!.destination.hasRoute<SesionesRoute>() -> 3
-                else -> 0
+                destino?.hasRoute<RegistrosRoute>() == true -> 0
+                destino?.hasRoute<HistorialRoute>() == true -> 1
+                destino?.hasRoute<EjerciciosRoute>() == true -> 2
+                destino?.hasRoute<SesionesRoute>() == true -> 3
+                else -> -1
             }
         }
     }
+    
     Scaffold(
         topBar = {
             BarraSuperior(comportamientoAnteScroll, onAbrirMenuLateral)
@@ -71,7 +73,7 @@ fun NavHostPrincipal(
         bottomBar = {
             BarraInferior(
                 iOpcionSeleccionada = iOpcionNavegacionSeleccionada,
-                onNavegarAPantalla = { indice -> navegarAOpcion(navController, indice) }
+                onNavegarAPantalla = { indice -> navegarAOpcionBarraInferior(navController, indice) }
             )
         },
         floatingActionButton = {},
