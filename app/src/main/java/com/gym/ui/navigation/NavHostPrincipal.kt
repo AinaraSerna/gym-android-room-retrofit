@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -30,6 +29,9 @@ import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
 import com.gym.ui.navigation.historial.HistorialRoute
 import com.gym.ui.navigation.historial.formRegistrosPorFechaDestination
 import com.gym.ui.navigation.historial.historialDestination
+import com.gym.ui.navigation.menulateral.ejerciciosApiDestination
+import com.gym.ui.navigation.menulateral.registrosApiDestination
+import com.gym.ui.navigation.menulateral.sesionesApiDestination
 import com.gym.ui.navigation.registros.FormNuevosRegistrosRoute
 import com.gym.ui.navigation.registros.RegistrosRoute
 import com.gym.ui.navigation.registros.formNuevosRegistrosDestination
@@ -38,14 +40,16 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHostPrincipal(
-    navController: NavHostController
+    navController: NavHostController,
+    onAbrirMenuLateral: () -> Unit,
+    scope: CoroutineScope
 ) {
     val comportamientoAnteScroll = TopAppBarDefaults.pinnedScrollBehavior()
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val entradaEnPilaDeNavegacionActuasState by navController.currentBackStackEntryAsState()
     val iOpcionNavegacionSeleccionada by remember {
@@ -62,7 +66,7 @@ fun NavHostPrincipal(
     }
     Scaffold(
         topBar = {
-            BarraSuperior(comportamientoAnteScroll)
+            BarraSuperior(comportamientoAnteScroll, onAbrirMenuLateral)
         },
         bottomBar = {
             BarraInferior(
@@ -109,6 +113,11 @@ fun NavHostPrincipal(
             detallesSesionDestination(
                 onIrAtras = { navController.popBackStack() }
             )
+
+            // Opciones menú lateral
+            registrosApiDestination()
+            ejerciciosApiDestination()
+            sesionesApiDestination()
         }
     }
 }

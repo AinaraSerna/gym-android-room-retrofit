@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.gym.ui.navigation.MenuLateral
 import com.gym.ui.navigation.NavHostPrincipal
 import com.gym.ui.theme.GymTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,9 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             GymTheme {
-                NavHostPrincipal(
-                    navController = navController
-                )
+                MenuLateral(navController)
             }
         }
     }
