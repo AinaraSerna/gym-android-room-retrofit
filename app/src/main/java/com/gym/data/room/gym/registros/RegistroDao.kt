@@ -3,6 +3,7 @@ package com.gym.data.room.gym.registros
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import java.time.LocalDate
@@ -15,9 +16,9 @@ interface RegistroDao {
     suspend fun getById(id: Int): RegistroEntity
     @Query(value = "SELECT * FROM registros WHERE fecha = :fecha")
     suspend fun getByFecha(fecha: LocalDate): List<RegistroEntity>
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(registroEntity: RegistroEntity)
-    @Update
+    @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun update(registroEntity: RegistroEntity)
     @Delete
     suspend fun delete(registroEntity: RegistroEntity)

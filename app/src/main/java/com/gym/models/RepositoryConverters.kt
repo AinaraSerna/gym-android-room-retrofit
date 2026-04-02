@@ -22,6 +22,7 @@ fun SesionEntity.toSesion() = Sesion(
 fun Ejercicio.toEjercicioEntity() = EjercicioEntity(
     id = this.id,
     nombre = this.nombre,
+    orden = this.orden,
     codSesion = this.codSesion,
     notas = this.notas
 )
@@ -29,6 +30,7 @@ fun Ejercicio.toEjercicioEntity() = EjercicioEntity(
 fun EjercicioEntity.toEjercicio() = Ejercicio(
     id = this.id,
     nombre = this.nombre,
+    orden = this.orden,
     codSesion = this.codSesion,
     notas = this.notas
 )

@@ -3,6 +3,7 @@ package com.gym.data.room.gym.ejercicios
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
@@ -17,10 +18,10 @@ interface EjercicioDao {
     @Query(value = "SELECT * FROM ejercicios WHERE cod_sesion = :codSesion")
     suspend fun getBySesion(codSesion: Int): List<EjercicioEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(ejercicioEntity: EjercicioEntity)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun update(ejercicioEntity: EjercicioEntity)
 
     @Delete

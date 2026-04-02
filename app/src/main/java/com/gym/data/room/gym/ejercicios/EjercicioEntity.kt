@@ -3,6 +3,7 @@ package com.gym.data.room.gym.ejercicios
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.gym.data.room.gym.sesiones.SesionEntity
 
@@ -15,11 +16,19 @@ import com.gym.data.room.gym.sesiones.SesionEntity
             childColumns = ["cod_sesion"],
             onDelete = ForeignKey.SET_NULL
         )
+    ],
+    indices = [
+        Index(
+            value = ["orden", "cod_sesion"],
+            unique = true
+        )
     ]
 )
 data class EjercicioEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
+    @ColumnInfo(name = "orden")
+    val orden: Int,
     @ColumnInfo(name = "nombre")
     val nombre: String,
     @ColumnInfo(name = "cod_sesion")

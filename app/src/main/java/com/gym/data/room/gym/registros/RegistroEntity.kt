@@ -6,7 +6,6 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.gym.data.room.gym.ejercicios.EjercicioEntity
 import java.time.LocalDate
-import java.util.Date
 
 @Entity(
     tableName = "registros",
