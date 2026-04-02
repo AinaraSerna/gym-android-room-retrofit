@@ -12,15 +12,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.composables.BarraInferior
 import com.gym.ui.composables.BarraSuperior
+import com.gym.ui.composables.BotonFlotante
+import com.gym.ui.composables.dialogos.InsertarSesionDialogo
+import com.gym.ui.features.sesiones.SesionesViewModel
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.ejercicios.EjerciciosRoute
 import com.gym.ui.navigation.ejercicios.detallesEjercicioDestination
@@ -52,20 +57,26 @@ fun NavHostPrincipal(
     val comportamientoAnteScroll = TopAppBarDefaults.pinnedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
     val entradaEnPilaDeNavegacionActuasState by navController.currentBackStackEntryAsState()
-    
+
     val iOpcionNavegacionSeleccionada by remember {
         derivedStateOf {
             val destino = entradaEnPilaDeNavegacionActuasState?.destination
             when {
-                destino?.hasRoute<RegistrosRoute>() == true -> 0
-                destino?.hasRoute<HistorialRoute>() == true -> 1
-                destino?.hasRoute<EjerciciosRoute>() == true -> 2
-                destino?.hasRoute<SesionesRoute>() == true -> 3
+                destino == null -> -1
+                destino.hasRoute<RegistrosRoute>() -> 0
+                destino.hasRoute<HistorialRoute>() -> 1
+                destino.hasRoute<EjerciciosRoute>() -> 2
+                destino.hasRoute<SesionesRoute>() -> 3
                 else -> -1
             }
         }
     }
-    
+    val sesionesVM = hiltViewModel<SesionesViewModel>()
+
+    val (mostrarDialogoInsertarSesion, setMostrarDialogoInsertarSesion) = remember {
+        mutableStateOf(value = false)
+    }
+
     Scaffold(
         topBar = {
             BarraSuperior(comportamientoAnteScroll, onAbrirMenuLateral)
@@ -73,13 +84,31 @@ fun NavHostPrincipal(
         bottomBar = {
             BarraInferior(
                 iOpcionSeleccionada = iOpcionNavegacionSeleccionada,
-                onNavegarAPantalla = { indice -> navegarAOpcionBarraInferior(navController, indice) }
+                onNavegarAPantalla = { indice ->
+                    navegarAOpcionBarraInferior(
+                        navController = navController,
+                        indice = indice
+                    )
+                }
             )
         },
-        floatingActionButton = {},
+        floatingActionButton = {
+            BotonFlotante(
+                onMostrarDialogo = {
+                    when (iOpcionNavegacionSeleccionada) {
+                        3 -> setMostrarDialogoInsertarSesion(it)
+                        else -> {}
+                    }
+                }
+            )
+        },
         floatingActionButtonPosition = FabPosition.End,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
+        // Diálogos
+        if (mostrarDialogoInsertarSesion){
+            InsertarSesionDialogo(setMostrarDialogoInsertarSesion = setMostrarDialogoInsertarSesion)
+        }
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,7 +128,8 @@ fun NavHostPrincipal(
                 onIrADetallesEjercicio = { navController.navigate(DetallesEjercicioRoute) }
             )
             sesionesDestination(
-                onIrADetallesSesion = { navController.navigate(DetallesSesionRoute) }
+                onIrADetallesSesion = { navController.navigate(DetallesSesionRoute) },
+                sesionesVM = sesionesVM
             )
 
             // Pantallas secundarias

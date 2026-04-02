@@ -34,6 +34,7 @@ import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
 import com.gym.ui.navigation.menulateral.RegistrosApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.theme.Cereza
+import com.gym.ui.theme.RosaPalo
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
@@ -89,7 +90,7 @@ fun MenuLateral(navController: NavHostController) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = Color.White,
+                drawerContainerColor = RosaPalo,
                 drawerContentColor = Cereza
             ) {
                 Text(
