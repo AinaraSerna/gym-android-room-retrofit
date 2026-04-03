@@ -10,6 +10,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,7 +108,10 @@ fun NavHostPrincipal(
     ) { paddingValues ->
         // Diálogos
         if (mostrarDialogoInsertarSesion){
-            InsertarSesionDialogo(setMostrarDialogoInsertarSesion = setMostrarDialogoInsertarSesion)
+            InsertarSesionDialogo(
+                setMostrarDialogoInsertarSesion = setMostrarDialogoInsertarSesion,
+                sesiones = sesionesVM.sesiones.collectAsState().value
+            )
         }
         NavHost(
             modifier = Modifier
