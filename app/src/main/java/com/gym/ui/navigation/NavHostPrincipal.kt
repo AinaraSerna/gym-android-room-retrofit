@@ -110,7 +110,8 @@ fun NavHostPrincipal(
         if (mostrarDialogoInsertarSesion){
             InsertarSesionDialogo(
                 setMostrarDialogoInsertarSesion = setMostrarDialogoInsertarSesion,
-                sesiones = sesionesVM.sesiones.collectAsState().value
+                sesiones = sesionesVM.sesiones.collectAsState().value,
+                onSesionEvent = sesionesVM::onSesionEvent,
             )
         }
         NavHost(

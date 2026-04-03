@@ -1,7 +1,7 @@
 package com.gym.ui.navigation.sesiones
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.gym.ui.features.sesiones.SesionScreen
@@ -16,12 +16,13 @@ fun NavGraphBuilder.sesionesDestination(
     sesionesVM: SesionesViewModel
 ) {
     composable<SesionesRoute> {
-        val sesiones by sesionesVM.sesiones.collectAsState()
-        val sesionSeleccionada by sesionesVM.sesionSeleccionada.collectAsState()
+        val sesiones by sesionesVM.sesiones.collectAsStateWithLifecycle()
+        val sesionSeleccionada by sesionesVM.sesionSeleccionada.collectAsStateWithLifecycle()
         SesionScreen(
             onIrADetallesSesion = onIrADetallesSesion,
             sesiones = sesiones,
-            sesionSeleccionada = sesionSeleccionada
+            sesionSeleccionada = sesionSeleccionada,
+            onSesionEvent = sesionesVM::onSesionEvent
         )
     }
 }

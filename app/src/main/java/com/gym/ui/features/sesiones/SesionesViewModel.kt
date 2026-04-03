@@ -40,15 +40,20 @@ class SesionesViewModel @Inject constructor(
         }
     }
 
-    private fun getSesionById(id: Int) {
+    private fun getSesionById(id: Int?) {
         viewModelScope.launch {
-            _sesionSeleccionada.value = repository.getById(id).toSesion().toSesionUiState()
+            if (id != null) {
+                _sesionSeleccionada.value = repository.getById(id).toSesion().toSesionUiState()
+            } else {
+                _sesionSeleccionada.value = null
+            }
         }
     }
 
     private fun insertSesion(sesionUiState: SesionUiState) {
         viewModelScope.launch {
             repository.insert(sesionUiState.toSesion())
+            getSesiones()
         }
     }
 
@@ -56,6 +61,7 @@ class SesionesViewModel @Inject constructor(
         viewModelScope.launch {
             repository.update(sesionUiState.toSesion())
             _sesionSeleccionada.value = null
+            getSesiones()
         }
     }
 
@@ -63,6 +69,7 @@ class SesionesViewModel @Inject constructor(
         viewModelScope.launch {
             repository.delete(sesionUiState.toSesion())
             _sesionSeleccionada.value = null
+            getSesiones()
         }
     }
 }

@@ -3,6 +3,7 @@ package com.gym.ui.composables.dialogos
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Description
@@ -22,17 +23,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaDeshabilitado
-import com.gym.ui.theme.GrisClaro
-import com.gym.ui.theme.RosaRojo
+import com.gym.ui.theme.RojoClaroError
+import com.gym.ui.theme.RojoError
+import com.gym.ui.theme.RosaPaloTransparente
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertarSesionDialogo(
     setMostrarDialogoInsertarSesion: (Boolean) -> Unit,
-    sesiones: List<SesionUiState>
+    sesiones: List<SesionUiState>,
+    onSesionEvent: (SesionEvent) -> Unit
 ) {
     val (codigoTextField, setCodigoTextField) = remember { mutableStateOf(value = "") }
     val (descripcionTextField, setDescripcionTextField) = remember { mutableStateOf(value = "") }
@@ -65,16 +69,21 @@ fun InsertarSesionDialogo(
                     isError = sesiones.map { it.nombre }.contains(codigoTextField)
                             || !regexCodigo.matches(input = codigoTextField)
                             && codigoTextField.isNotEmpty(),
+                    singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Cereza,
-                        unfocusedIndicatorColor = RosaRojo,
+                        unfocusedIndicatorColor = Cereza,
                         focusedLabelColor = Cereza,
-                        focusedContainerColor = GrisClaro,
-                        unfocusedContainerColor = GrisClaro,
-                        unfocusedLabelColor = CerezaDeshabilitado
+                        focusedContainerColor = RosaPaloTransparente,
+                        unfocusedContainerColor = RosaPaloTransparente,
+                        unfocusedLabelColor = CerezaDeshabilitado,
+                        errorContainerColor = RojoClaroError,
+                        errorTextColor = RojoError,
+                        errorLabelColor = RojoError,
                     )
                 )
                 OutlinedTextField(
+                    modifier = Modifier.height(100.dp),
                     value = descripcionTextField,
                     onValueChange = { setDescripcionTextField(it) },
                     label = { Text(text = "Descripción") },
@@ -85,22 +94,33 @@ fun InsertarSesionDialogo(
                             tint = Cereza
                         )
                     },
+                    singleLine = false,
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Cereza,
-                        unfocusedIndicatorColor = RosaRojo,
+                        unfocusedIndicatorColor = Cereza,
                         focusedLabelColor = Cereza,
-                        focusedContainerColor = GrisClaro,
-                        unfocusedContainerColor = GrisClaro,
-                        unfocusedLabelColor = CerezaDeshabilitado
+                        focusedContainerColor = RosaPaloTransparente,
+                        unfocusedContainerColor = RosaPaloTransparente,
+                        unfocusedLabelColor = CerezaDeshabilitado,
                     )
                 )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { setMostrarDialogoInsertarSesion(false) },
-                enabled = sesiones.map { it.nombre }.contains(codigoTextField)
-                        && !regexCodigo.matches(input = codigoTextField)
+                onClick = {
+                    onSesionEvent(
+                        SesionEvent.OnInsertSesion(
+                            SesionUiState(
+                                nombre = codigoTextField,
+                                descripcion = descripcionTextField
+                            )
+                        )
+                    )
+                    setMostrarDialogoInsertarSesion(false)
+                },
+                enabled = !sesiones.map { it.nombre }.contains(codigoTextField)
+                        && regexCodigo.matches(input = codigoTextField)
                         && codigoTextField.isNotEmpty()
                         && descripcionTextField.isNotEmpty(),
                 colors = ButtonDefaults.textButtonColors(
@@ -130,6 +150,7 @@ fun InsertarSesionDialogoPreview() {
         setMostrarDialogoInsertarSesion = {},
         sesiones = listOf(
             SesionUiState(id = 1, nombre = "1-M", descripcion = "")
-        )
+        ),
+        onSesionEvent = {}
     )
 }

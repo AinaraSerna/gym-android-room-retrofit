@@ -70,33 +70,19 @@ fun BarraInferior(
                 selected = index == iOpcionSeleccionada,
                 onClick = { onNavegarAPantalla(index) },
                 label = {
-                    Box(contentAlignment = Alignment.Center) {
-                        if (index == iOpcionSeleccionada) {
-                            Text(
-                                text = opcion.titulo,
-                                fontWeight = FontWeight.ExtraBold,
-                                style = TextStyle(
-                                    drawStyle = Stroke(
-                                        width = 2f,
-                                        join = StrokeJoin.Round
-                                    ),
-                                    color = Color.Black
-                                )
+                    Text(
+                        text = opcion.titulo,
+                        color = Cereza,
+                        fontWeight = if (iOpcionSeleccionada == index) FontWeight.ExtraBold else FontWeight.Normal,
+                        style = if (iOpcionSeleccionada == index) TextStyle(
+                            shadow = Shadow(
+                                color = Color.Black.copy(alpha = 0.3f),
+                                offset = Offset(x = 2f, y = 2f),
+                                blurRadius = 2f
                             )
-                        }
-                        Text(
-                            text = opcion.titulo,
-                            color = if (iOpcionSeleccionada == index) Color.White else Cereza,
-                            fontWeight = if (iOpcionSeleccionada == index) FontWeight.ExtraBold else FontWeight.Normal,
-                            style = if (iOpcionSeleccionada == index) TextStyle(
-                                shadow = Shadow(
-                                    color = Color.Black.copy(alpha = 0.3f),
-                                    offset = Offset(x = 2f, y = 2f),
-                                    blurRadius = 3f
-                                )
-                            ) else TextStyle.Default
-                        )
-                    }
+                        ) else TextStyle.Default
+                    )
+
                 },
                 icon = {
                     Icon(
