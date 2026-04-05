@@ -1,9 +1,12 @@
 package com.gym.ui.features.sesiones
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.gym.models.repositorios.SesionRepository
 import com.gym.models.toSesion
+import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

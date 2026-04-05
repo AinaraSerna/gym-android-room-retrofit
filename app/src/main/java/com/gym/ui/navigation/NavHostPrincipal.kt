@@ -200,7 +200,12 @@ fun NavHostPrincipal(
             detallesEjercicioDestination(
                 onIrAtras = { navController.popBackStack() }
             )
-            detallesSesionDestination()
+            detallesSesionDestination(
+                sesionesVM = sesionesVM,
+                onIrAtras = { navController.popBackStack() },
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
 
             // Opciones menú lateral
             registrosApiDestination()

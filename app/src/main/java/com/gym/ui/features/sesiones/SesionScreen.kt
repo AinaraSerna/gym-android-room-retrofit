@@ -39,7 +39,7 @@ fun SesionScreen(
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(all = 16.dp)
+                        .padding(vertical = 16.dp, horizontal = 32.dp)
                         .height(120.dp)
                         .border(
                             width = if (estaSeleccionada) 5.dp else 3.dp,
@@ -66,11 +66,11 @@ fun SesionScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(8.dp),
+                                .padding(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),
+                                modifier = Modifier.padding(top = 2.dp, bottom = 6.dp),
                                 text = sesion.nombre,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = Cereza,

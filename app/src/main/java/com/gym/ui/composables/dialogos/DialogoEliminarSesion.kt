@@ -3,7 +3,7 @@ package com.gym.ui.composables.dialogos
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -38,7 +38,7 @@ fun DialogoEliminarSesion(
             ) {
                 Icon(
                     modifier = Modifier.padding(end = 6.dp),
-                    imageVector = Icons.Filled.ListAlt,
+                    imageVector = Icons.AutoMirrored.Filled.ListAlt,
                     contentDescription = null,
                     tint = Cereza
                 )
