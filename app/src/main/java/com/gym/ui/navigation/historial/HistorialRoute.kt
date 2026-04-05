@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data object HistorialRoute
 
 fun NavGraphBuilder.historialDestination(
-    onIrAFormRegistrosPorFecha: (Int) -> Unit
+    onIrAFormRegistrosPorFecha: () -> Unit
 ) {
     composable<HistorialRoute> {
         HistorialScreen(

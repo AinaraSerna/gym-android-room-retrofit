@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun RegistrosScreen(
-    onIrAFormNuevosRegistros: (Int) -> Unit
+    onIrAFormNuevosRegistros: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Registros")

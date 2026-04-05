@@ -8,12 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object DetallesSesionRoute
 
-fun NavGraphBuilder.detallesSesionDestination(
-    onIrAtras: () -> Unit
-) {
+fun NavGraphBuilder.detallesSesionDestination() {
     composable<DetallesSesionRoute> {
-        DetallesSesionScreen(
-            onIrAtras = onIrAtras
-        )
+        DetallesSesionScreen()
     }
 }

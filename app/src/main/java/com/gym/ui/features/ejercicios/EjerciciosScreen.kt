@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun EjerciciosScreen(
-    onIrADetallesEjercicio : (Int) -> Unit
+    onIrADetallesEjercicio: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Ejercicios")

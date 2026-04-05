@@ -28,7 +28,6 @@ import com.gym.ui.theme.RosaRojo
 
 @Composable
 fun SesionScreen(
-    onIrADetallesSesion: (Int) -> Unit,
     sesiones: List<SesionUiState>,
     sesionSeleccionada: SesionUiState?,
     onSesionEvent: (SesionEvent) -> Unit
@@ -41,9 +40,9 @@ fun SesionScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(all = 16.dp)
-                        .height(100.dp)
+                        .height(120.dp)
                         .border(
-                            width = if (estaSeleccionada) 3.dp else 1.dp,
+                            width = if (estaSeleccionada) 5.dp else 3.dp,
                             color = Cereza,
                             shape = MaterialTheme.shapes.extraSmall
                         ),
@@ -60,7 +59,7 @@ fun SesionScreen(
                     ),
                     shape = MaterialTheme.shapes.extraSmall,
                     elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = if (estaSeleccionada) 12.dp else 8.dp
+                        defaultElevation = if (estaSeleccionada) 18.dp else 12.dp
                     )
                 ) {
                     Box {

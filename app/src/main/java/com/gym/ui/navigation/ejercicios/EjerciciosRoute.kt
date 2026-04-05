@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data object EjerciciosRoute
 
 fun NavGraphBuilder.ejerciciosDestination(
-    onIrADetallesEjercicio: (Int) -> Unit
+    onIrADetallesEjercicio: () -> Unit
 ) {
     composable<EjerciciosRoute> {
         EjerciciosScreen(

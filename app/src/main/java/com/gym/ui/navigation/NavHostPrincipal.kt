@@ -25,7 +25,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.composables.BarraInferior
 import com.gym.ui.composables.BarraSuperior
 import com.gym.ui.composables.BotonFlotante
+import com.gym.ui.composables.dialogos.DialogoEliminarSesion
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
+import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.ejercicios.EjerciciosRoute
@@ -35,6 +37,9 @@ import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
 import com.gym.ui.navigation.historial.HistorialRoute
 import com.gym.ui.navigation.historial.formRegistrosPorFechaDestination
 import com.gym.ui.navigation.historial.historialDestination
+import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
+import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.navigation.menulateral.ejerciciosApiDestination
 import com.gym.ui.navigation.menulateral.registrosApiDestination
 import com.gym.ui.navigation.menulateral.sesionesApiDestination
@@ -68,6 +73,13 @@ fun NavHostPrincipal(
                 destino.hasRoute<HistorialRoute>() -> 1
                 destino.hasRoute<EjerciciosRoute>() -> 2
                 destino.hasRoute<SesionesRoute>() -> 3
+                destino.hasRoute<FormNuevosRegistrosRoute>() -> 4
+                destino.hasRoute<FormRegistrosPorFechaRoute>() -> 5
+                destino.hasRoute<DetallesEjercicioRoute>() -> 6
+                destino.hasRoute<DetallesSesionRoute>() -> 7
+                destino.hasRoute<SesionesApiRoute>() -> 8
+                destino.hasRoute<EjerciciosApiRoute>() -> 9
+                destino.hasRoute<RegistrosApiRoute>() -> 10
                 else -> -1
             }
         }
@@ -77,10 +89,41 @@ fun NavHostPrincipal(
     val (mostrarDialogoInsertarSesion, setMostrarDialogoInsertarSesion) = remember {
         mutableStateOf(value = false)
     }
+    val (mostrarDialogoEliminarSesion, setMostrarDialogoEliminarSesion) = remember {
+        mutableStateOf(value = false)
+    }
 
     Scaffold(
         topBar = {
-            BarraSuperior(comportamientoAnteScroll, onAbrirMenuLateral)
+            BarraSuperior(
+                comportamientoAnteScroll = comportamientoAnteScroll,
+                onAbrirMenuLateral = onAbrirMenuLateral,
+                titulo = when (iOpcionNavegacionSeleccionada) {
+                    0 -> "Registros"
+                    1 -> "Historial"
+                    2 -> "Ejercicios"
+                    3 -> "Sesiones"
+                    4 -> "Formulario registros"
+                    5 -> "Formulario historial"
+                    6 -> "Detalles ejercicio"
+                    7 -> "Detalles sesión"
+                    8 -> "Sesiones API"
+                    9 -> "Ejercicios API"
+                    10 -> "Registros API"
+                    else -> "Gym"
+                },
+                opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
+                    3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
+                    else -> false
+                },
+                setMostrarDialogoEliminacion = when(iOpcionNavegacionSeleccionada){
+                    3 -> setMostrarDialogoEliminarSesion
+                    else -> { _ -> }
+                },
+                iOpcionSeleccionada = iOpcionNavegacionSeleccionada,
+                onSesionEvent = sesionesVM::onSesionEvent,
+                navController = navController
+            )
         },
         bottomBar = {
             BarraInferior(
@@ -107,11 +150,22 @@ fun NavHostPrincipal(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         // Diálogos
-        if (mostrarDialogoInsertarSesion){
+        if (mostrarDialogoEliminarSesion) {
+            DialogoEliminarSesion(
+                setMostrarDialogo = setMostrarDialogoEliminarSesion,
+                snackbarHostState = snackbarHostState,
+                scope = scope,
+                onSesionEvent = sesionesVM::onSesionEvent,
+                sesionSeleccionada = sesionesVM.sesionSeleccionada.collectAsState().value ?: SesionUiState()
+            )
+        }
+        if (mostrarDialogoInsertarSesion) {
             InsertarSesionDialogo(
                 setMostrarDialogoInsertarSesion = setMostrarDialogoInsertarSesion,
                 sesiones = sesionesVM.sesiones.collectAsState().value,
                 onSesionEvent = sesionesVM::onSesionEvent,
+                scope = scope,
+                snackbarHostState = snackbarHostState
             )
         }
         NavHost(
@@ -133,7 +187,6 @@ fun NavHostPrincipal(
                 onIrADetallesEjercicio = { navController.navigate(DetallesEjercicioRoute) }
             )
             sesionesDestination(
-                onIrADetallesSesion = { navController.navigate(DetallesSesionRoute) },
                 sesionesVM = sesionesVM
             )
 
@@ -147,9 +200,7 @@ fun NavHostPrincipal(
             detallesEjercicioDestination(
                 onIrAtras = { navController.popBackStack() }
             )
-            detallesSesionDestination(
-                onIrAtras = { navController.popBackStack() }
-            )
+            detallesSesionDestination()
 
             // Opciones menú lateral
             registrosApiDestination()

@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data object RegistrosRoute
 
 fun NavGraphBuilder.registrosDestination(
-    onIrAFormNuevosRegistros: (Int) -> Unit
+    onIrAFormNuevosRegistros: () -> Unit
 ) {
     composable<RegistrosRoute> {
         RegistrosScreen(

@@ -12,31 +12,38 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gym.ui.composables.SnackbarMensaje
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
-import com.gym.ui.theme.RosaPaloTransparente
+import com.gym.ui.theme.RosaPalo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertarSesionDialogo(
     setMostrarDialogoInsertarSesion: (Boolean) -> Unit,
     sesiones: List<SesionUiState>,
-    onSesionEvent: (SesionEvent) -> Unit
+    onSesionEvent: (SesionEvent) -> Unit,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState
 ) {
     val (codigoTextField, setCodigoTextField) = remember { mutableStateOf(value = "") }
     val (descripcionTextField, setDescripcionTextField) = remember { mutableStateOf(value = "") }
@@ -74,8 +81,8 @@ fun InsertarSesionDialogo(
                         focusedIndicatorColor = Cereza,
                         unfocusedIndicatorColor = Cereza,
                         focusedLabelColor = Cereza,
-                        focusedContainerColor = RosaPaloTransparente,
-                        unfocusedContainerColor = RosaPaloTransparente,
+                        focusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
                         unfocusedLabelColor = CerezaDeshabilitado,
                         errorContainerColor = RojoClaroError,
                         errorTextColor = RojoError,
@@ -99,8 +106,8 @@ fun InsertarSesionDialogo(
                         focusedIndicatorColor = Cereza,
                         unfocusedIndicatorColor = Cereza,
                         focusedLabelColor = Cereza,
-                        focusedContainerColor = RosaPaloTransparente,
-                        unfocusedContainerColor = RosaPaloTransparente,
+                        focusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
                         unfocusedLabelColor = CerezaDeshabilitado,
                     )
                 )
@@ -118,6 +125,12 @@ fun InsertarSesionDialogo(
                         )
                     )
                     setMostrarDialogoInsertarSesion(false)
+                    scope.launch {
+                        SnackbarMensaje(
+                            mensaje = "Sesión creada correctamente",
+                            snackbarHostState = snackbarHostState
+                        )
+                    }
                 },
                 enabled = !sesiones.map { it.nombre }.contains(codigoTextField)
                         && regexCodigo.matches(input = codigoTextField)
@@ -151,6 +164,8 @@ fun InsertarSesionDialogoPreview() {
         sesiones = listOf(
             SesionUiState(id = 1, nombre = "1-M", descripcion = "")
         ),
-        onSesionEvent = {}
+        onSesionEvent = {},
+        scope = rememberCoroutineScope(),
+        snackbarHostState = remember { SnackbarHostState() }
     )
 }

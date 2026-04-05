@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun HistorialScreen(
-    onIrAFormRegistrosPorFecha: (Int) -> Unit
+    onIrAFormRegistrosPorFecha: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Historial")

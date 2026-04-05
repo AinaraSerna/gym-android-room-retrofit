@@ -12,7 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val RosaPalo = Color(red = 250, green = 205, blue = 249, alpha = 255)
 
-val RosaPaloTransparente = Color(red = 250, green = 205, blue = 249, alpha = 185)
 val RosaFucsia = Color(237, 111, 227)
 val RosaRojo = Color(red = 233, green = 30, blue = 99, alpha = 255)
 val Cereza = Color(red = 108, green = 22, blue = 107, alpha = 255)

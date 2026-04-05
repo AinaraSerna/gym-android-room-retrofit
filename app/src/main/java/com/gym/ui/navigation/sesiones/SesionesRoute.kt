@@ -12,14 +12,12 @@ import kotlinx.serialization.Serializable
 data object SesionesRoute
 
 fun NavGraphBuilder.sesionesDestination(
-    onIrADetallesSesion: (Int) -> Unit,
     sesionesVM: SesionesViewModel
 ) {
     composable<SesionesRoute> {
         val sesiones by sesionesVM.sesiones.collectAsStateWithLifecycle()
         val sesionSeleccionada by sesionesVM.sesionSeleccionada.collectAsStateWithLifecycle()
         SesionScreen(
-            onIrADetallesSesion = onIrADetallesSesion,
             sesiones = sesiones,
             sesionSeleccionada = sesionSeleccionada,
             onSesionEvent = sesionesVM::onSesionEvent

@@ -5,9 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DetallesSesionScreen(
-    onIrAtras: () -> Unit
-) {
+fun DetallesSesionScreen() {
     Column {
         Text("Detalles Sesion")
     }
