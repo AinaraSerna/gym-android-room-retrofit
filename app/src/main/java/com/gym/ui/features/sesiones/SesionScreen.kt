@@ -9,22 +9,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaPalo
 import com.gym.ui.theme.RosaRojo
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
 
 @Composable
 fun SesionScreen(
@@ -33,18 +41,21 @@ fun SesionScreen(
     onSesionEvent: (SesionEvent) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(25.dp),
+            contentPadding = PaddingValues(18.dp)
+        ) {
             items(sesiones) { sesion ->
                 val estaSeleccionada = sesionSeleccionada?.id == sesion.id
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 32.dp)
-                        .height(120.dp)
+                        .height(100.dp)
                         .border(
-                            width = if (estaSeleccionada) 5.dp else 3.dp,
-                            color = Cereza,
-                            shape = MaterialTheme.shapes.extraSmall
+                            width = 1.dp,
+                            color = if (estaSeleccionada) Cereza else Cereza.copy(alpha = 0.2f),
+                            shape = MaterialTheme.shapes.medium
                         ),
                     onClick = {
                         if (estaSeleccionada) {
@@ -54,51 +65,79 @@ fun SesionScreen(
                         }
                     },
                     colors = CardDefaults.elevatedCardColors(
-                        containerColor = RosaPalo,
-                        contentColor = Color.White
+                        containerColor = RosaPalo
                     ),
-                    shape = MaterialTheme.shapes.extraSmall,
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = if (estaSeleccionada) 18.dp else 12.dp
+                    shape = MaterialTheme.shapes.medium,
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = if (estaSeleccionada) 9.dp else 3.dp
                     )
                 ) {
-                    Box {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(top = 2.dp, bottom = 6.dp),
-                                text = sesion.nombre,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Cereza,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.White)
-                                    .size(1.dp)
-                            )
-                            Text(
-                                modifier = Modifier.padding(top = 8.dp),
-                                text = sesion.descripcion,
-                                color = RosaRojo,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                        if (estaSeleccionada) {
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        Box {
+                            // Barra de acento lateral
                             Box(
                                 modifier = Modifier
-                                    .matchParentSize()
-                                    .background(color = Cereza.copy(alpha = 0.3f))
+                                    .fillMaxHeight()
+                                    .width(if (estaSeleccionada) 8.dp else 4.dp)
+                                    .background(color = if (estaSeleccionada) Cereza else Cereza.copy(alpha = 0.3f))
                             )
+
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxSize(),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = sesion.nombre,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = Cereza,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = sesion.descripcion,
+                                    color = RosaRojo,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            // Icono de flecha para indicar interactividad
+                            Icon(
+                                imageVector = Icons.Default.ChevronRight,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(end = 12.dp)
+                                    .align(Alignment.CenterEnd),
+                                tint = Cereza.copy(alpha = 0.4f)
+                            )
+
+                            if(estaSeleccionada){
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(color = Cereza.copy(alpha = 0.4f))
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SesionScreenPreview(){
+    SesionScreen(
+        sesiones = listOf(
+            SesionUiState(id = 1, nombre = "1-M", descripcion = "Descripcion de la sesión"),
+            SesionUiState(id = 2, nombre = "2-M", descripcion = "Descripcion de la sesión")
+        ),
+        sesionSeleccionada = SesionUiState(id = 1, nombre = "1-M", descripcion = ""),
+        onSesionEvent = {}
+    )
 }
