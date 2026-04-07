@@ -10,8 +10,6 @@ class EjercicioRepository @Inject constructor(
 ) {
     suspend fun getAll() = dao.getAll()
     suspend fun getById(id: Int) = dao.getById(id)
-    suspend fun getBySesion(codSesion: Int) = dao.getBySesion(codSesion)
-//    suspend fun countEjerciciosPorSesion() = dao.countEjerciciosPorSesion()
     suspend fun insert(ejercicio: Ejercicio) =
         dao.insert(ejercicioEntity = ejercicio.toEjercicioEntity())
     suspend fun update(ejercicio: Ejercicio) =
