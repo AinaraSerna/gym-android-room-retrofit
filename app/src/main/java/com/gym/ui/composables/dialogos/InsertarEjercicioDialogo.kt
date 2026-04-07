@@ -69,7 +69,7 @@ fun InsertarEjercicioDialogo(
         onDismissRequest = {},
         title = {
             Text(
-                text = "Crear ejercicio",
+                text = "Añadir ejercicio",
                 fontWeight = FontWeight.Bold,
                 color = Cereza
             )
@@ -111,7 +111,7 @@ fun InsertarEjercicioDialogo(
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = ordenTextField,
-                    onValueChange = { setOrdenTextField(it) },
+                    onValueChange = setOrdenTextField,
                     label = { Text(text = "Orden") },
                     placeholder = {
                         Text(text = "Orden", color = Cereza.copy(alpha = 0.5f))

@@ -132,8 +132,9 @@ fun NavHostPrincipal(
                     else -> { _ -> }
                 },
                 iOpcionSeleccionada = iOpcionNavegacionSeleccionada,
+                navController = navController,
                 onSesionEvent = sesionesVM::onSesionEvent,
-                navController = navController
+                onEjercicioEvent = ejerciciosVM::onEjercicioEvent
             )
         },
         bottomBar = {
@@ -211,7 +212,8 @@ fun NavHostPrincipal(
                 onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }
             )
             ejerciciosDestination(
-                ejerciciosVM = ejerciciosVM
+                ejerciciosVM = ejerciciosVM,
+                sesionesVM = sesionesVM
             )
             sesionesDestination(
                 sesionesVM = sesionesVM

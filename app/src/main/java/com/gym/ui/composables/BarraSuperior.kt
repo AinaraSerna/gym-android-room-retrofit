@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
@@ -35,7 +36,8 @@ fun BarraSuperior(
     setMostrarDialogoEliminacion: (Boolean) -> Unit,
     onSesionEvent: (SesionEvent) -> Unit,
     iOpcionSeleccionada: Int,
-    navController: NavHostController
+    navController: NavHostController,
+    onEjercicioEvent: (EjercicioEvent) -> Unit
 ) {
     TopAppBar(
         title = { Text(text = titulo) },
@@ -127,6 +129,7 @@ fun BarraSuperiorPreview() {
         setMostrarDialogoEliminacion = {},
         onSesionEvent = {},
         iOpcionSeleccionada = 0,
-        navController = NavHostController(context = LocalContext.current)
+        navController = NavHostController(context = LocalContext.current),
+        onEjercicioEvent = {}
     )
 }

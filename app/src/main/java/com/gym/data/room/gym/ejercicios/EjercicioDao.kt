@@ -10,7 +10,7 @@ import com.gym.data.room.gym.TotalResultados
 
 @Dao
 interface EjercicioDao {
-    @Query(value = "SELECT * FROM ejercicios")
+    @Query(value = "SELECT * FROM ejercicios ORDER BY cod_sesion, orden, nombre")
     suspend fun getAll(): List<EjercicioEntity>
 
     @Query(value = "SELECT * FROM ejercicios WHERE id = :id")
