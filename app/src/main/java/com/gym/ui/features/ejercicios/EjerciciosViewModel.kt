@@ -55,7 +55,10 @@ class EjerciciosViewModel @Inject constructor(
     }
 
     private fun insertEjercicio(ejercicio: EjercicioUiState) {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            repository.insert(ejercicio.toEjercicio())
+            getEjercicios()
+        }
     }
 
     private fun updateEjercicio(ejercicio: EjercicioUiState) {

@@ -126,7 +126,7 @@ fun NavHostPrincipal(
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
                 },
-                setMostrarDialogoEliminacion = when(iOpcionNavegacionSeleccionada){
+                setMostrarDialogoEliminacion = when (iOpcionNavegacionSeleccionada) {
                     2 -> setMostrarDialogoEliminarEjercicio
                     3 -> setMostrarDialogoEliminarSesion
                     else -> { _ -> }
@@ -178,15 +178,18 @@ fun NavHostPrincipal(
                 snackbarHostState = snackbarHostState,
                 scope = scope,
                 onSesionEvent = sesionesVM::onSesionEvent,
-                sesionSeleccionada = sesionesVM.sesionSeleccionada.collectAsState().value ?: SesionUiState()
+                sesionSeleccionada = sesionesVM.sesionSeleccionada.collectAsState().value
+                    ?: SesionUiState()
             )
         }
         // Ejercicios
-        if (mostrarDialogoInsertarEjercicio){
+        if (mostrarDialogoInsertarEjercicio) {
+            val sesionesDesplegable = listOf(Pair(null, " --- ")) +
+                        sesionesVM.sesiones.collectAsState().value.map { Pair(it.id, it.nombre) }
             InsertarEjercicioDialogo(
                 setMostrarDialogoInsertarEjercicio = setMostrarDialogoInsertarEjercicio,
                 ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map { it.nombre },
-                sesiones = sesionesVM.sesiones.collectAsState().value.map { Pair(it.id, it.nombre) },
+                sesiones = sesionesDesplegable,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 scope = scope,
                 snackbarHostState = snackbarHostState

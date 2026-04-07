@@ -64,8 +64,11 @@ fun InsertarSesionDialogo(
             ) {
                 OutlinedTextField(
                     value = codigoTextField,
-                    onValueChange = { setCodigoTextField(it) },
+                    onValueChange = setCodigoTextField,
                     label = { Text(text = "Código") },
+                    placeholder = {
+                        Text(text = "Código", color = Cereza.copy(alpha = 0.5f))
+                    },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ListAlt,
@@ -92,8 +95,11 @@ fun InsertarSesionDialogo(
                 OutlinedTextField(
                     modifier = Modifier.height(100.dp),
                     value = descripcionTextField,
-                    onValueChange = { setDescripcionTextField(it) },
+                    onValueChange = setDescripcionTextField,
                     label = { Text(text = "Descripción") },
+                    placeholder = {
+                        Text(text = "Descripción", color = Cereza.copy(alpha = 0.5f))
+                    },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Filled.Description,
