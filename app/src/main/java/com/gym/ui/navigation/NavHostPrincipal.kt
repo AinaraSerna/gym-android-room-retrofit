@@ -191,7 +191,7 @@ fun NavHostPrincipal(
                         sesionesVM.sesiones.collectAsState().value.map { Pair(it.id, it.nombre) }
             InsertarEjercicioDialogo(
                 setMostrarDialogoInsertarEjercicio = setMostrarDialogoInsertarEjercicio,
-                ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map { it.nombre },
+                ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map { Pair(it.nombre, it.codSesion) },
                 sesiones = sesionesDesplegable,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 scope = scope,

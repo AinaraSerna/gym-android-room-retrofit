@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun InsertarEjercicioDialogo(
     setMostrarDialogoInsertarEjercicio: (Boolean) -> Unit,
-    ejercicios: List<String>,
+    ejercicios: List<Pair<String, Int?>>,
     onEjercicioEvent: (EjercicioEvent) -> Unit,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
@@ -83,7 +83,7 @@ fun InsertarEjercicioDialogo(
                     modifier = Modifier.fillMaxWidth(),
                     value = nombreTextField,
                     onValueChange = setNombreTextField,
-                    isError = ejercicios.contains(nombreTextField),
+                    isError = ejercicios.map { it.first }.contains(nombreTextField),
                     label = { Text(text = "Nombre") },
                     placeholder = {
                         Text(text = "Nombre", color = Cereza.copy(alpha = 0.5f))
@@ -165,6 +165,9 @@ fun InsertarEjercicioDialogo(
                                 },
                                 onClick = {
                                     sesionSeleccionada = sesion
+                                    setOrdenTextField(
+                                        (ejercicios.filter { it.second == sesionSeleccionada!!.first }.size + 1).toString()
+                                    )
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -258,7 +261,7 @@ fun InsertarEjercicioDialogo(
                 },
                 enabled = nombreTextField.isNotEmpty()
                         && ordenTextField.isNotEmpty()
-                        && !ejercicios.contains(nombreTextField)
+                        && !ejercicios.map { it.first }.contains(nombreTextField)
                         && sesionSeleccionada?.first != null
                         && notasTextField.isNotEmpty(),
                 colors = ButtonDefaults.textButtonColors(
@@ -289,7 +292,7 @@ fun InsertarEjercicioDialogo(
 fun InsertarEjercicioDialogoPreview() {
     InsertarEjercicioDialogo(
         setMostrarDialogoInsertarEjercicio = {},
-        ejercicios = listOf("Pecho plano", "Pecho inclinado"),
+        ejercicios = listOf(Pair("Pecho plano", 1), Pair("Pecho inclinado", 2)),
         onEjercicioEvent = {},
         scope = rememberCoroutineScope(),
         snackbarHostState = remember { SnackbarHostState() },
