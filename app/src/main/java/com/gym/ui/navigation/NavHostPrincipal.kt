@@ -25,9 +25,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.composables.BarraInferior
 import com.gym.ui.composables.BarraSuperior
 import com.gym.ui.composables.BotonFlotante
+import com.gym.ui.composables.dialogos.DialogoEliminarEjercicio
 import com.gym.ui.composables.dialogos.DialogoEliminarSesion
 import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
+import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.ejercicios.EjerciciosViewModel
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
@@ -194,6 +196,16 @@ fun NavHostPrincipal(
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 scope = scope,
                 snackbarHostState = snackbarHostState
+            )
+        }
+        if (mostrarDialogoEliminarEjercicio) {
+            DialogoEliminarEjercicio(
+                setMostrarDialogo = setMostrarDialogoEliminarEjercicio,
+                snackbarHostState = snackbarHostState,
+                scope = scope,
+                onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
+                ejercicioSeleccionado = ejerciciosVM.ejercicioSeleccionado.collectAsState().value
+                    ?: EjercicioUiState()
             )
         }
         NavHost(

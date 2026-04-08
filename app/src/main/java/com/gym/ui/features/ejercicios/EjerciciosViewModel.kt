@@ -40,9 +40,13 @@ class EjerciciosViewModel @Inject constructor(
         }
     }
 
-    private fun getEjercicioById(id: Int) {
+    private fun getEjercicioById(id: Int?) {
         viewModelScope.launch {
-            _ejercicioSeleccionado.value = repository.getById(id = id).toEjercicio().toEjercicioUiState()
+            if (id != null){
+                _ejercicioSeleccionado.value = repository.getById(id = id).toEjercicio().toEjercicioUiState()
+            } else {
+                _ejercicioSeleccionado.value = null
+            }
         }
     }
 

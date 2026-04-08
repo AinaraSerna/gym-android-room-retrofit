@@ -16,21 +16,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gym.ui.composables.SnackbarMensaje
-import com.gym.ui.features.sesiones.SesionEvent
-import com.gym.ui.features.sesiones.SesionUiState
+import com.gym.ui.features.ejercicios.EjercicioEvent
+import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun DialogoEliminarSesion(
+fun DialogoEliminarEjercicio(
     setMostrarDialogo: (Boolean) -> Unit,
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
-    onSesionEvent: (SesionEvent) -> Unit,
-    sesionSeleccionada: SesionUiState
-) {
+    onEjercicioEvent: (EjercicioEvent) -> Unit,
+    ejercicioSeleccionado: EjercicioUiState
+){
     AlertDialog(
         onDismissRequest = {},
         title = {
@@ -44,7 +44,7 @@ fun DialogoEliminarSesion(
                     tint = Cereza
                 )
                 Text(
-                    text = "Borrar sesión",
+                    text = "Borrar ejercicio",
                     fontWeight = FontWeight.Bold,
                     color = Cereza
                 )
@@ -52,18 +52,18 @@ fun DialogoEliminarSesion(
         },
         text = {
             Text(
-                text = "¿Estás segura que quieres borrar la sesión \'${sesionSeleccionada.nombre}\'?",
+                text = "¿Estás segura que quieres borrar el ejercicio \'${ejercicioSeleccionado.nombre}\'?",
                 color = RosaRojo
             )
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSesionEvent(SesionEvent.OnDeleteSesion(sesionUiState = sesionSeleccionada))
+                    onEjercicioEvent(EjercicioEvent.OnDeleteEjercicio(ejercicio = ejercicioSeleccionado))
                     setMostrarDialogo(false)
                     scope.launch {
                         SnackbarMensaje(
-                            mensaje = "Sesión borrada correctamente",
+                            mensaje = "Ejercicio borrado correctamente",
                             snackbarHostState = snackbarHostState
                         )
                     }

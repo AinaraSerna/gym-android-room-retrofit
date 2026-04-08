@@ -34,9 +34,9 @@ fun BarraSuperior(
     titulo: String,
     opcionSeleccionada: Boolean,
     setMostrarDialogoEliminacion: (Boolean) -> Unit,
-    onSesionEvent: (SesionEvent) -> Unit,
     iOpcionSeleccionada: Int,
     navController: NavHostController,
+    onSesionEvent: (SesionEvent) -> Unit,
     onEjercicioEvent: (EjercicioEvent) -> Unit
 ) {
     TopAppBar(
@@ -69,6 +69,7 @@ fun BarraSuperior(
                 IconButton(
                     onClick = {
                         when (iOpcionSeleccionada) {
+                            2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                             3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
                         }
                     }

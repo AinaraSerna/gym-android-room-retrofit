@@ -19,11 +19,13 @@ fun NavGraphBuilder.ejerciciosDestination(
     composable<EjerciciosRoute> {
         val sesiones by sesionesVM.sesiones.collectAsState()
         val ejercicios by ejerciciosVM.ejercicios.collectAsState()
+        val ejercicioSeleccionado by ejerciciosVM.ejercicioSeleccionado.collectAsState()
         
         EjerciciosScreen(
             ejercicios = ejercicios,
             onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
-            sesiones = sesiones
+            sesiones = sesiones,
+            ejercicioSeleccionado = ejercicioSeleccionado
         )
     }
 }

@@ -108,34 +108,6 @@ fun InsertarEjercicioDialogo(
                         errorLabelColor = RojoError
                     )
                 )
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = ordenTextField,
-                    onValueChange = setOrdenTextField,
-                    label = { Text(text = "Orden") },
-                    placeholder = {
-                        Text(text = "Orden", color = Cereza.copy(alpha = 0.5f))
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Numbers,
-                            contentDescription = null,
-                            tint = Cereza
-                        )
-                    },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Cereza,
-                        unfocusedIndicatorColor = Cereza,
-                        focusedLabelColor = Cereza,
-                        focusedContainerColor = RosaPalo.copy(alpha = 185f),
-                        unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
-                        unfocusedLabelColor = CerezaDeshabilitado,
-                    )
-                )
 
                 ExposedDropdownMenuBox(
                     expanded = expanded,
@@ -203,6 +175,35 @@ fun InsertarEjercicioDialogo(
                         }
                     }
                 }
+
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = ordenTextField,
+                    onValueChange = setOrdenTextField,
+                    label = { Text(text = "Orden") },
+                    placeholder = {
+                        Text(text = "Orden", color = Cereza.copy(alpha = 0.5f))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Numbers,
+                            contentDescription = null,
+                            tint = Cereza
+                        )
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Cereza,
+                        unfocusedIndicatorColor = Cereza,
+                        focusedLabelColor = Cereza,
+                        focusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedLabelColor = CerezaDeshabilitado,
+                    )
+                )
 
                 OutlinedTextField(
                     modifier = Modifier
