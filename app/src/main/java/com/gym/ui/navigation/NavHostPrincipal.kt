@@ -90,6 +90,7 @@ fun NavHostPrincipal(
     }
     val sesionesVM = hiltViewModel<SesionesViewModel>()
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
+    val sesiones = sesionesVM.sesiones.collectAsState().value
 
     val (mostrarDialogoInsertarSesion, setMostrarDialogoInsertarSesion) = remember {
         mutableStateOf(value = false)
@@ -151,15 +152,17 @@ fun NavHostPrincipal(
             )
         },
         floatingActionButton = {
-            BotonFlotante(
-                onMostrarDialogo = {
-                    when (iOpcionNavegacionSeleccionada) {
-                        2 -> setMostrarDialogoInsertarEjercicio(it)
-                        3 -> setMostrarDialogoInsertarSesion(it)
-                        else -> {}
+            if (iOpcionNavegacionSeleccionada != 0){
+                BotonFlotante(
+                    onMostrarDialogo = {
+                        when (iOpcionNavegacionSeleccionada) {
+                            2 -> setMostrarDialogoInsertarEjercicio(it)
+                            3 -> setMostrarDialogoInsertarSesion(it)
+                            else -> {}
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         floatingActionButtonPosition = FabPosition.End,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -218,7 +221,8 @@ fun NavHostPrincipal(
         ) {
             // Pantallas principales
             registrosDestination(
-                onIrAFormNuevosRegistros = { navController.navigate(FormNuevosRegistrosRoute) }
+                onIrAFormNuevosRegistros = { navController.navigate(FormNuevosRegistrosRoute) },
+                sesiones = sesiones
             )
             historialDestination(
                 onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }

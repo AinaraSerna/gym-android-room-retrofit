@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.SportsGymnastics
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -41,7 +42,6 @@ import com.gym.ui.composables.SnackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.theme.Cereza
-import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
 import com.gym.ui.theme.RosaPalo
@@ -61,6 +61,7 @@ fun InsertarEjercicioDialogo(
 ) {
     val (nombreTextField, setNombreTextField) = remember { mutableStateOf(value = "") }
     val (ordenTextField, setOrdenTextField) = remember { mutableStateOf(value = "") }
+    val (serieTextField, setSerieTextField) = remember { mutableStateOf(value = "3") }
     val (notasTextField, setNotasTextField) = remember { mutableStateOf(value = "") }
     var expanded by remember { mutableStateOf(value = false) }
     var sesionSeleccionada by remember { mutableStateOf(value = sesiones.firstOrNull()) }
@@ -102,7 +103,7 @@ fun InsertarEjercicioDialogo(
                         focusedLabelColor = Cereza,
                         focusedContainerColor = RosaPalo.copy(alpha = 185f),
                         unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
-                        unfocusedLabelColor = CerezaDeshabilitado,
+                        unfocusedLabelColor = Cereza,
                         errorContainerColor = RojoClaroError,
                         errorTextColor = RojoError,
                         errorLabelColor = RojoError
@@ -204,7 +205,36 @@ fun InsertarEjercicioDialogo(
                         focusedLabelColor = Cereza,
                         focusedContainerColor = RosaPalo.copy(alpha = 185f),
                         unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
-                        unfocusedLabelColor = CerezaDeshabilitado,
+                        unfocusedLabelColor = Cereza,
+                    )
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = serieTextField,
+                    onValueChange = setSerieTextField,
+                    label = { Text(text = "Nº de series") },
+                    placeholder = {
+                        Text(text = "Nº de series", color = Cereza.copy(alpha = 0.5f))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Timelapse,
+                            contentDescription = null,
+                            tint = Cereza
+                        )
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Cereza,
+                        unfocusedIndicatorColor = Cereza,
+                        focusedLabelColor = Cereza,
+                        focusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
+                        unfocusedLabelColor = Cereza,
                     )
                 )
 
@@ -232,7 +262,7 @@ fun InsertarEjercicioDialogo(
                         focusedLabelColor = Cereza,
                         focusedContainerColor = RosaPalo.copy(alpha = 185f),
                         unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
-                        unfocusedLabelColor = CerezaDeshabilitado,
+                        unfocusedLabelColor = Cereza,
                     )
                 )
             }
@@ -246,6 +276,7 @@ fun InsertarEjercicioDialogo(
                                 id = null,
                                 nombre = nombreTextField,
                                 orden = ordenTextField.toIntOrNull() ?: 0,
+                                serie = serieTextField.toIntOrNull() ?: 0,
                                 codSesion = sesionSeleccionada?.first,
                                 notas = notasTextField
                             )
@@ -266,7 +297,7 @@ fun InsertarEjercicioDialogo(
                         && notasTextField.isNotEmpty(),
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Cereza,
-                    disabledContentColor = CerezaDeshabilitado
+                    disabledContentColor = Cereza
                 )
             ) {
                 Text(text = "Guardar")

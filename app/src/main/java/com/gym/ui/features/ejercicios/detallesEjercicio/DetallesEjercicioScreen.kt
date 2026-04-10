@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Numbers
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -45,6 +46,7 @@ import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
+import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
 import com.gym.ui.theme.RosaPalo
@@ -69,6 +71,9 @@ fun DetallesEjercicioScreen(
     var expanded by remember { mutableStateOf(value = false) }
     val (codSesionSeleccionado, setCodSesionSeleccionado) = remember {
         mutableStateOf(value = ejercicioSeleccionado.codSesion)
+    }
+    val (seriesTextField, setSeriesTextField) = remember {
+        mutableStateOf(value = ejercicioSeleccionado.serie.toString())
     }
     val (ordenTextField, setOrdenTextField) = remember {
         mutableStateOf(value = ejercicioSeleccionado.orden.toString())
@@ -243,6 +248,38 @@ fun DetallesEjercicioScreen(
             )
         )
 
+        // Series
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            value = seriesTextField,
+            onValueChange = setSeriesTextField,
+            label = { Text(text = "Nº de series") },
+            placeholder = {
+                Text(text = "Nº de series", color = Cereza.copy(alpha = 0.5f))
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Timelapse,
+                    contentDescription = null,
+                    tint = Cereza
+                )
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number
+            ),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Cereza,
+                unfocusedIndicatorColor = Cereza,
+                focusedLabelColor = Cereza,
+                focusedContainerColor = RosaPalo.copy(alpha = 185f),
+                unfocusedContainerColor = RosaPalo.copy(alpha = 185f),
+                unfocusedLabelColor = Cereza,
+            )
+        )
+
         // Notas
         OutlinedTextField(
             modifier = Modifier
@@ -289,6 +326,7 @@ fun DetallesEjercicioScreen(
                                 id = ejercicioSeleccionado.id,
                                 nombre = nombreTextField,
                                 orden = ordenTextField.toIntOrNull() ?: 0,
+                                serie = seriesTextField.toIntOrNull() ?: 0,
                                 codSesion = ejercicioSeleccionado.codSesion,
                                 notas = notasTextField
                             )
@@ -303,10 +341,12 @@ fun DetallesEjercicioScreen(
                     }
                 },
                 enabled = nombreTextField.isNotEmpty() && ordenTextField.isNotEmpty()
-                        && notasTextField.isNotEmpty()
+                        && notasTextField.isNotEmpty() && seriesTextField.isNotEmpty()
+                        && seriesTextField.isNotEmpty()
                         && listaEjercicios.none { it.codSesion == ejercicioSeleccionado.codSesion }
                         || (nombreTextField != ejercicioSeleccionado.nombre)
                         || (ordenTextField != ejercicioSeleccionado.orden.toString())
+                        || (seriesTextField != ejercicioSeleccionado.serie.toString())
                         || (notasTextField != ejercicioSeleccionado.notas)
                         || (codSesionSeleccionado != ejercicioSeleccionado.codSesion),
                 colors = ButtonDefaults.buttonColors(

@@ -5,6 +5,7 @@ import com.gym.data.Ejercicio
 data class EjercicioUiState(
     val id: Int? = null,
     val orden : Int = 0,
+    val serie : Int = 0,
     val nombre : String = "",
     val codSesion : Int? = null,
     val notas : String = ""
@@ -13,6 +14,7 @@ data class EjercicioUiState(
 fun Ejercicio.toEjercicioUiState() = EjercicioUiState(
     id = this.id,
     nombre = this.nombre,
+    serie = this.serie,
     orden = this.orden,
     codSesion = this.codSesion,
     notas = this.notas
@@ -21,6 +23,7 @@ fun Ejercicio.toEjercicioUiState() = EjercicioUiState(
 fun EjercicioUiState.toEjercicio() = Ejercicio(
     id = this.id,
     nombre = this.nombre,
+    serie = this.serie,
     orden = this.orden,
     codSesion = this.codSesion,
     notas = this.notas

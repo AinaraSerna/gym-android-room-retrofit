@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e3ba1a8e73ccf6d99e229075a4d9401e",
+    "identityHash": "68e2c174e46903f807fc7c661be6b2c5",
     "entities": [
       {
         "tableName": "sesiones",
@@ -48,7 +48,7 @@
       },
       {
         "tableName": "ejercicios",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `orden` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `cod_sesion` INTEGER, `notas` TEXT NOT NULL, FOREIGN KEY(`cod_sesion`) REFERENCES `sesiones`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `orden` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `serie` INTEGER NOT NULL, `cod_sesion` INTEGER, `notas` TEXT NOT NULL, FOREIGN KEY(`cod_sesion`) REFERENCES `sesiones`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -66,6 +66,12 @@
             "fieldPath": "nombre",
             "columnName": "nombre",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serie",
+            "columnName": "serie",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -174,7 +180,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e3ba1a8e73ccf6d99e229075a4d9401e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68e2c174e46903f807fc7c661be6b2c5')"
     ]
   }
 }

@@ -25,6 +25,8 @@ data class EjercicioEntity(
     val orden: Int,
     @ColumnInfo(name = "nombre")
     val nombre: String,
+    @ColumnInfo(name = "serie")
+    val serie: Int,
     @ColumnInfo(name = "cod_sesion")
     val codSesion: Int?,
     @ColumnInfo(name = "notas")
