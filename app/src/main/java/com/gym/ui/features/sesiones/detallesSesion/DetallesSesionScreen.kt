@@ -169,7 +169,8 @@ fun DetallesSesionScreen(
                 enabled = nombreTextField.isNotEmpty() && descripcionTextField.isNotEmpty()
                         && regexCodigo.matches(nombreTextField)
                         && sesiones.none { it.nombre == nombreTextField && it.id != sesionSeleccionada.id }
-                        && (nombreTextField != sesionSeleccionada.nombre || descripcionTextField != sesionSeleccionada.descripcion),
+                        && (nombreTextField != sesionSeleccionada.nombre
+                        || descripcionTextField != sesionSeleccionada.descripcion),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Cereza
                 ),

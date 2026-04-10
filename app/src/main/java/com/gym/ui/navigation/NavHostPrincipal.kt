@@ -244,6 +244,7 @@ fun NavHostPrincipal(
             )
             detallesEjercicioDestination(
                 ejerciciosVM = ejerciciosVM,
+                sesionesVM = sesionesVM,
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
                 snackbarHostState = snackbarHostState
