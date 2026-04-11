@@ -2,7 +2,6 @@ package com.gym.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.gym.data.Ejercicio
 import com.gym.data.retrofit.services.EjerciciosService
 import com.gym.data.retrofit.services.RegistrosService
 import com.gym.data.retrofit.services.SesionesService
@@ -12,7 +11,7 @@ import com.gym.data.room.GymBD
 import com.gym.data.room.gym.ejercicios.EjercicioDao
 import com.gym.data.room.gym.registros.RegistroDao
 import com.gym.models.repositorios.EjercicioRepository
-import com.gym.models.repositorios.RegistroRepository
+import com.gym.models.repositorios.RegistrosRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,7 +65,7 @@ class AppModule {
     @Singleton
     fun provideRegistroRepositorio(
         registroDao: RegistroDao
-    ): RegistroRepository = RegistroRepository(registroDao)
+    ): RegistrosRepository = RegistrosRepository(registroDao)
 
     @Provides
     @Singleton

@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.gym.ui.theme.Cereza
 
 @Composable
-fun BotonFlotante(onMostrarDialogo: (Boolean) -> Unit) {
+fun BotonFlotante(onAccion: (Boolean) -> Unit) {
     FloatingActionButton(
         modifier = Modifier.size(70.dp),
-        onClick = { onMostrarDialogo(true) },
+        onClick = { onAccion(true) },
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 5.dp,
             pressedElevation = 10.dp
@@ -37,5 +37,5 @@ fun BotonFlotante(onMostrarDialogo: (Boolean) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun BotonFlotantePreview() {
-    BotonFlotante(onMostrarDialogo = {})
+    BotonFlotante(onAccion = {})
 }

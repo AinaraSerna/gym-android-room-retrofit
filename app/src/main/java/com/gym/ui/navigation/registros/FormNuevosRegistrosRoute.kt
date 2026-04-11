@@ -1,14 +1,17 @@
 package com.gym.ui.navigation.registros
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.gym.ui.features.registros.formNuevosRegistros.FormNuevosRegistrosScreen
+import com.gym.ui.features.registros.formNuevosRegistros.FormNuevosRegistrosViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object FormNuevosRegistrosRoute
+data class FormNuevosRegistrosRoute(val codSesion : Int)
 
 fun NavGraphBuilder.formNuevosRegistrosDestination(
     onIrAtras: () -> Unit,
@@ -16,8 +19,12 @@ fun NavGraphBuilder.formNuevosRegistrosDestination(
     snackbarHostState: SnackbarHostState
 ) {
     composable<FormNuevosRegistrosRoute> {
+        val formNuevosRegistrosVM = hiltViewModel<FormNuevosRegistrosViewModel>()
         FormNuevosRegistrosScreen(
-            onIrAtras = onIrAtras
+            onIrAtras = onIrAtras,
+            listaEjercicios = formNuevosRegistrosVM.listaEjerciciosDeSesion.collectAsState().value,
+            scope = scope,
+            snackbarHostState = snackbarHostState
         )
     }
 }

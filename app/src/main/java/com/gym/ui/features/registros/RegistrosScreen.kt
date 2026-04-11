@@ -37,8 +37,9 @@ import com.gym.ui.theme.RosaRojo
 
 @Composable
 fun RegistrosScreen(
-    onIrAFormNuevosRegistros: () -> Unit,
-    sesiones: List<SesionUiState>
+    sesiones: List<SesionUiState>,
+    sesionSeleccionada: SesionUiState?,
+    onRegistroEvent: (RegistrosEvent) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -47,33 +48,45 @@ fun RegistrosScreen(
             contentPadding = PaddingValues(18.dp)
         ) {
             items(sesiones) { sesion ->
+                val estaSeleccionada = sesion.id == sesionSeleccionada?.id
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
                         .border(
                             width = 1.dp,
-                            color = /*if (estaSeleccionada) Cereza else*/ Cereza.copy(alpha = 0.2f),
+                            color = if (estaSeleccionada) Cereza else Cereza.copy(alpha = 0.2f),
                             shape = MaterialTheme.shapes.medium
                         ),
                     onClick = {
+                        if (estaSeleccionada) {
+                            onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+                        } else {
+                            onRegistroEvent(RegistrosEvent.OnGetSesionById(sesion.id))
+                        }
                     },
                     colors = CardDefaults.elevatedCardColors(
                         containerColor = RosaPalo
                     ),
                     shape = MaterialTheme.shapes.medium,
                     elevation = CardDefaults.cardElevation(
-                        defaultElevation = /*if (estaSeleccionada) 9.dp else*/ 3.dp
+                        defaultElevation = if (estaSeleccionada) 9.dp else 3.dp
                     )
                 ) {
-                    Row(modifier = Modifier.fillMaxSize()) {
+                    Row(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
                         Box {
                             // Barra de acento lateral
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .width(/*if (estaSeleccionada) 8.dp else*/ 4.dp)
-                                    .background(color = /*if (estaSeleccionada) Cereza else*/ Cereza.copy(alpha = 0.3f))
+                                    .width(if (estaSeleccionada) 8.dp else 4.dp)
+                                    .background(
+                                        color = if (estaSeleccionada) Cereza else Cereza.copy(
+                                            alpha = 0.3f
+                                        )
+                                    )
                             )
 
                             Column(
@@ -108,13 +121,13 @@ fun RegistrosScreen(
                                 tint = Cereza.copy(alpha = 0.4f)
                             )
 
-//                            if(estaSeleccionada){
-//                                Box(
-//                                    modifier = Modifier
-//                                        .matchParentSize()
-//                                        .background(color = Cereza.copy(alpha = 0.4f))
-//                                )
-//                            }
+                            if (estaSeleccionada) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(color = Cereza.copy(alpha = 0.4f))
+                                )
+                            }
                         }
                     }
                 }

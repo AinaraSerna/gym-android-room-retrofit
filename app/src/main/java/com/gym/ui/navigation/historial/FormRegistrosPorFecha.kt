@@ -3,7 +3,7 @@ package com.gym.ui.navigation.historial
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.gym.ui.features.registros.formNuevosRegistros.FormNuevosRegistrosScreen
+import com.gym.ui.features.historial.formRegistrosPorFecha.FormRegistrosPorFecha
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 
@@ -16,8 +16,10 @@ fun NavGraphBuilder.formRegistrosPorFechaDestination(
     snackbarHostState: SnackbarHostState
 ) {
     composable<FormRegistrosPorFechaRoute> {
-        FormNuevosRegistrosScreen(
-            onIrAtras = onIrAtras
+        FormRegistrosPorFecha (
+            onIrAtras = onIrAtras,
+            scope = scope,
+            snackbarHostState = snackbarHostState
         )
     }
 }

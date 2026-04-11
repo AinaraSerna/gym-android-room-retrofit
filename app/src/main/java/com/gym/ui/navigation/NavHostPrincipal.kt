@@ -31,6 +31,7 @@ import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.ejercicios.EjerciciosViewModel
+import com.gym.ui.features.registros.RegistrosViewModel
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
@@ -90,7 +91,10 @@ fun NavHostPrincipal(
     }
     val sesionesVM = hiltViewModel<SesionesViewModel>()
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
+    val registrosVM = hiltViewModel<RegistrosViewModel>()
+
     val sesiones = sesionesVM.sesiones.collectAsState().value
+    val sesionRegistrosSeleccionada = registrosVM.sesionRegistrosSeleccionada.collectAsState().value
 
     val (mostrarDialogoInsertarSesion, setMostrarDialogoInsertarSesion) = remember {
         mutableStateOf(value = false)
@@ -125,6 +129,7 @@ fun NavHostPrincipal(
                     else -> "Gym"
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
+                    0 -> sesionRegistrosSeleccionada != null
                     2 -> ejerciciosVM.ejercicioSeleccionado.collectAsState().value != null
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
@@ -137,7 +142,8 @@ fun NavHostPrincipal(
                 iOpcionSeleccionada = iOpcionNavegacionSeleccionada,
                 navController = navController,
                 onSesionEvent = sesionesVM::onSesionEvent,
-                onEjercicioEvent = ejerciciosVM::onEjercicioEvent
+                onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
+                onRegistroEvent = registrosVM::onRegistrosEvent
             )
         },
         bottomBar = {
@@ -152,16 +158,26 @@ fun NavHostPrincipal(
             )
         },
         floatingActionButton = {
-            if (iOpcionNavegacionSeleccionada != 0){
-                BotonFlotante(
-                    onMostrarDialogo = {
-                        when (iOpcionNavegacionSeleccionada) {
-                            2 -> setMostrarDialogoInsertarEjercicio(it)
-                            3 -> setMostrarDialogoInsertarSesion(it)
-                            else -> {}
-                        }
+            when (iOpcionNavegacionSeleccionada) {
+                0 -> {
+                    val idSesion = registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
+                    if (idSesion != null) {
+                        BotonFlotante(
+                            onAccion = { navController.navigate(route = FormNuevosRegistrosRoute(codSesion = idSesion)) }
+                        )
                     }
-                )
+                }
+                in 2..3 -> {
+                    BotonFlotante(
+                        onAccion = {
+                            when (iOpcionNavegacionSeleccionada) {
+                                2 -> setMostrarDialogoInsertarEjercicio(it)
+                                3 -> setMostrarDialogoInsertarSesion(it)
+                                else -> {}
+                            }
+                        }
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -190,11 +206,16 @@ fun NavHostPrincipal(
         }
         // Ejercicios
         if (mostrarDialogoInsertarEjercicio) {
-            val sesionesDesplegable = listOf(Pair(null, " --- ")) +
-                        sesionesVM.sesiones.collectAsState().value.map { Pair(it.id, it.nombre) }
+            val sesionesDesplegable =
+                listOf(Pair(null, " --- ")) + sesiones.map { Pair(it.id, it.nombre) }
             InsertarEjercicioDialogo(
                 setMostrarDialogoInsertarEjercicio = setMostrarDialogoInsertarEjercicio,
-                ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map { Pair(it.nombre, it.codSesion) },
+                ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map {
+                    Pair(
+                        it.nombre,
+                        it.codSesion
+                    )
+                },
                 sesiones = sesionesDesplegable,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 scope = scope,
@@ -221,8 +242,7 @@ fun NavHostPrincipal(
         ) {
             // Pantallas principales
             registrosDestination(
-                onIrAFormNuevosRegistros = { navController.navigate(FormNuevosRegistrosRoute) },
-                sesiones = sesiones
+                registrosVM = registrosVM
             )
             historialDestination(
                 onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }

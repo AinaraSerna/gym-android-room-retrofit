@@ -4,11 +4,10 @@ import com.gym.data.Registro
 import com.gym.data.room.gym.registros.RegistroDao
 import com.gym.models.toRegistroEntity
 import java.time.LocalDate
-import java.util.Date
 import javax.inject.Inject
 
 
-class RegistroRepository @Inject constructor(
+class RegistrosRepository @Inject constructor(
     private val registroDao: RegistroDao
 ) {
     suspend fun getAll() = registroDao.getAll()

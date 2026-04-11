@@ -1,5 +1,6 @@
 package com.gym.ui.composables
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Undo
@@ -14,15 +15,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.gym.ui.features.ejercicios.EjercicioEvent
+import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
-import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
-import com.gym.ui.navigation.registros.FormNuevosRegistrosRoute
 import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.theme.RosaFucsia
 
@@ -37,7 +39,8 @@ fun BarraSuperior(
     iOpcionSeleccionada: Int,
     navController: NavHostController,
     onSesionEvent: (SesionEvent) -> Unit,
-    onEjercicioEvent: (EjercicioEvent) -> Unit
+    onEjercicioEvent: (EjercicioEvent) -> Unit,
+    onRegistroEvent: (RegistrosEvent) -> Unit
 ) {
     TopAppBar(
         title = { Text(text = titulo) },
@@ -53,6 +56,7 @@ fun BarraSuperior(
                         )
                     }
                 }
+
                 in 4..7 -> {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -66,48 +70,55 @@ fun BarraSuperior(
         },
         actions = {
             if (opcionSeleccionada) {
-                IconButton(
-                    onClick = {
-                        when (iOpcionSeleccionada) {
-                            2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
-                            3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                when (iOpcionSeleccionada) {
+                    0 -> {
+                        IconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = {
+                                onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+                            }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Undo,
+                                contentDescription = "Undo",
+                                tint = Color.White
+                            )
                         }
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Undo,
-                        contentDescription = "Deshacer",
-                        tint = Color.White
-                    )
-                }
-                IconButton(onClick = {
-                    when (iOpcionSeleccionada) {
-                        0 -> {
-                            navController.navigate(FormNuevosRegistrosRoute)
+                    in 2..3 -> {
+                        IconButton(
+                            onClick = {
+                                when (iOpcionSeleccionada) {
+                                    2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                                    3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Undo,
+                                contentDescription = "Deshacer",
+                                tint = Color.White
+                            )
                         }
-                        1 -> {
-                            navController.navigate(FormRegistrosPorFechaRoute)
+                        IconButton(onClick = {
+                            when (iOpcionSeleccionada) {
+                                2 -> { navController.navigate(DetallesEjercicioRoute) }
+                                3 -> { navController.navigate(DetallesSesionRoute) }
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "Editar",
+                                tint = Color.White
+                            )
                         }
-                        2 -> {
-                            navController.navigate(DetallesEjercicioRoute)
-                        }
-                        3 -> {
-                            navController.navigate(DetallesSesionRoute)
+                        IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Eliminar",
+                                tint = Color.White
+                            )
                         }
                     }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Editar",
-                        tint = Color.White
-                    )
-                }
-                IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Eliminar",
-                        tint = Color.White
-                    )
                 }
             }
         },
@@ -128,9 +139,10 @@ fun BarraSuperiorPreview() {
         titulo = "Registros",
         opcionSeleccionada = false,
         setMostrarDialogoEliminacion = {},
-        onSesionEvent = {},
         iOpcionSeleccionada = 0,
         navController = NavHostController(context = LocalContext.current),
-        onEjercicioEvent = {}
+        onSesionEvent = {},
+        onEjercicioEvent = {},
+        onRegistroEvent = {}
     )
 }

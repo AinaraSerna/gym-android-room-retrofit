@@ -15,6 +15,9 @@ interface EjercicioDao {
     @Query(value = "SELECT * FROM ejercicios WHERE id = :id")
     suspend fun getById(id: Int): EjercicioEntity
 
+    @Query(value = "SELECT * FROM ejercicios WHERE cod_sesion = :codSesion ORDER BY orden, nombre")
+    suspend fun getByCodSesion(codSesion: Int): List<EjercicioEntity>
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(ejercicioEntity: EjercicioEntity)
 
