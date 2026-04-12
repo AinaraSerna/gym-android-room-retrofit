@@ -46,3 +46,13 @@ fun Registro.toRegistroEntity() = RegistroEntity(
     peso = this.peso,
     repeticiones = this.repeticiones
 )
+
+fun RegistroEntity.toRegistro() = Registro(
+    id = this.id,
+    codEjercicio = this.codEjercicio,
+    nombreEjercicio = this.nombreEjercicio,
+    fecha = this.fecha,
+    serie = this.serie,
+    peso = this.peso,
+    repeticiones = this.repeticiones
+)

@@ -249,7 +249,6 @@ fun NavHostPrincipal(
                 registrosVM = registrosVM
             )
             historialDestination(
-                onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) },
                 historialVM = historialVM
             )
             ejerciciosDestination(

@@ -11,12 +11,10 @@ import kotlinx.serialization.Serializable
 data object HistorialRoute
 
 fun NavGraphBuilder.historialDestination(
-    onIrAFormRegistrosPorFecha: () -> Unit,
     historialVM: HistorialViewModel
 ) {
     composable<HistorialRoute> {
         HistorialScreen(
-            onIrAFormRegistrosPorFecha = onIrAFormRegistrosPorFecha,
             historial = historialVM.historial.collectAsState().value,
             registroDeHistorialSeleccionado = historialVM.registroHistorialSeleccionado.collectAsState().value,
             onHistorialEvent = historialVM::onHistorialEvent

@@ -14,7 +14,7 @@ class RegistrosRepository @Inject constructor(
     suspend fun getById(id: Int) = registroDao.getById(id)
     suspend fun getHistorial() = registroDao.getHistorial()
     suspend fun getRegistroDeHistorial(fecha: LocalDate) = registroDao.getRegistroDeHistorial(fecha)
-    suspend fun getByFecha(fecha: LocalDate) = registroDao.getByFecha(fecha)
+    suspend fun getRegistrosByFecha(fecha: LocalDate) = registroDao.getRegistrosByFecha(fecha)
     suspend fun insert(registro: Registro) = registroDao.insert(registroEntity = registro.toRegistroEntity())
     suspend fun update(registro: Registro) = registroDao.update(registroEntity = registro.toRegistroEntity())
     suspend fun delete(registro: Registro) = registroDao.delete(registroEntity = registro.toRegistroEntity())

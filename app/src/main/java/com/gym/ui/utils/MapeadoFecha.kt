@@ -1,0 +1,46 @@
+package com.gym.ui.utils
+
+import java.time.LocalDate
+import java.util.Locale
+
+fun fechaFormatoHispanoLocal(fecha: LocalDate): String {
+    return "${
+        traduccionDia(diaIngles = fecha.dayOfWeek.name).replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.ROOT
+            ) else it.toString()
+        }
+    }, ${fecha.dayOfMonth} de " +
+            "${traduccionMes(mesIngles = fecha.month.name)} de ${fecha.year}"
+}
+
+private fun traduccionMes(mesIngles: String): String {
+    return when (mesIngles.lowercase()) {
+        "january" -> "enero"
+        "february" -> "febrero"
+        "march" -> "marzo"
+        "april" -> "abril"
+        "may" -> "mayo"
+        "june" -> "junio"
+        "july" -> "julio"
+        "august" -> "agosto"
+        "september" -> "septiembre"
+        "october" -> "octubre"
+        "november" -> "noviembre"
+        "december" -> "diciembre"
+        else -> mesIngles.lowercase()
+    }
+}
+
+private fun traduccionDia(diaIngles: String): String {
+    return when(diaIngles.lowercase()){
+        "monday" -> "lunes"
+        "tuesday" -> "martes"
+        "wednesday" -> "miércoles"
+        "thursday" -> "jueves"
+        "friday" -> "viernes"
+        "saturday" -> "sábado"
+        "sunday" -> "domingo"
+        else -> diaIngles.lowercase()
+    }
+}
