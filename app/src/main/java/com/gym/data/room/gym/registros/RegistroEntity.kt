@@ -30,7 +30,7 @@ data class RegistroEntity(
     @ColumnInfo(name = "serie")
     val serie: Int,
     @ColumnInfo(name = "peso")
-    val peso: Int,
+    val peso: Float,
     @ColumnInfo(name = "repeticiones")
-    val repeticiones: Int
+    val repeticiones: String
 )

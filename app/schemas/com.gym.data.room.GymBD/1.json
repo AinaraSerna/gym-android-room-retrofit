@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "68e2c174e46903f807fc7c661be6b2c5",
+    "identityHash": "d1a7f93b3e7c831e8fd3fa3b962cf244",
     "entities": [
       {
         "tableName": "sesiones",
@@ -110,7 +110,7 @@
       },
       {
         "tableName": "registros",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cod_ejercicio` INTEGER, `nombre_ejercicio` TEXT NOT NULL, `fecha` INTEGER NOT NULL, `serie` INTEGER NOT NULL, `peso` INTEGER NOT NULL, `repeticiones` INTEGER NOT NULL, FOREIGN KEY(`cod_ejercicio`) REFERENCES `ejercicios`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cod_ejercicio` INTEGER, `nombre_ejercicio` TEXT NOT NULL, `fecha` INTEGER NOT NULL, `serie` INTEGER NOT NULL, `peso` REAL NOT NULL, `repeticiones` TEXT NOT NULL, FOREIGN KEY(`cod_ejercicio`) REFERENCES `ejercicios`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -145,13 +145,13 @@
           {
             "fieldPath": "peso",
             "columnName": "peso",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "repeticiones",
             "columnName": "repeticiones",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -180,7 +180,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68e2c174e46903f807fc7c661be6b2c5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd1a7f93b3e7c831e8fd3fa3b962cf244')"
     ]
   }
 }

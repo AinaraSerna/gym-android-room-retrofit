@@ -14,6 +14,7 @@ val RosaPalo = Color(red = 250, green = 205, blue = 249, alpha = 255)
 
 val RosaFucsia = Color(237, 111, 227)
 val RosaRojo = Color(red = 233, green = 30, blue = 99, alpha = 255)
+val CerezaOscuro = Color(red = 63, green = 16, blue = 62, alpha = 255)
 val Cereza = Color(red = 108, green = 22, blue = 107, alpha = 255)
 val CerezaDeshabilitado = Color(red = 161, green = 131, blue = 161, alpha = 159)
 

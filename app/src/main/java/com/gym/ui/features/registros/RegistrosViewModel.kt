@@ -30,6 +30,7 @@ class RegistrosViewModel @Inject constructor(
         when (event) {
             is RegistrosEvent.OnGetSesiones -> getSesiones()
             is RegistrosEvent.OnGetSesionById -> getSesionById(event.id)
+            else -> {}
         }
     }
 
