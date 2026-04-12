@@ -31,6 +31,7 @@ import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.ejercicios.EjerciciosViewModel
+import com.gym.ui.features.historial.HistorialViewModel
 import com.gym.ui.features.registros.RegistrosViewModel
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
@@ -92,6 +93,7 @@ fun NavHostPrincipal(
     val sesionesVM = hiltViewModel<SesionesViewModel>()
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
     val registrosVM = hiltViewModel<RegistrosViewModel>()
+    val historialVM = hiltViewModel<HistorialViewModel>()
 
     val sesiones = sesionesVM.sesiones.collectAsState().value
     val sesionRegistrosSeleccionada = registrosVM.sesionRegistrosSeleccionada.collectAsState().value
@@ -130,6 +132,7 @@ fun NavHostPrincipal(
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
                     0 -> sesionRegistrosSeleccionada != null
+                    1 -> historialVM.registroHistorialSeleccionado.collectAsState().value != null
                     2 -> ejerciciosVM.ejercicioSeleccionado.collectAsState().value != null
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
@@ -143,7 +146,8 @@ fun NavHostPrincipal(
                 navController = navController,
                 onSesionEvent = sesionesVM::onSesionEvent,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
-                onRegistroEvent = registrosVM::onRegistrosEvent
+                onRegistroEvent = registrosVM::onRegistrosEvent,
+                onHistorialEvent = historialVM::onHistorialEvent
             )
         },
         bottomBar = {
@@ -245,7 +249,8 @@ fun NavHostPrincipal(
                 registrosVM = registrosVM
             )
             historialDestination(
-                onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }
+                onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) },
+                historialVM = historialVM
             )
             ejerciciosDestination(
                 ejerciciosVM = ejerciciosVM,

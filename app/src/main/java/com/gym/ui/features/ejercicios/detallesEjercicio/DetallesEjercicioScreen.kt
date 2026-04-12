@@ -46,7 +46,6 @@ import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
-import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
 import com.gym.ui.theme.RosaPalo
@@ -324,11 +323,11 @@ fun DetallesEjercicioScreen(
                         EjercicioEvent.OnUpdateEjercicio(
                             EjercicioUiState(
                                 id = ejercicioSeleccionado.id,
-                                nombre = nombreTextField,
+                                nombre = nombreTextField.trimEnd(),
                                 orden = ordenTextField.toIntOrNull() ?: 0,
                                 serie = seriesTextField.toIntOrNull() ?: 0,
                                 codSesion = ejercicioSeleccionado.codSesion,
-                                notas = notasTextField
+                                notas = notasTextField.trimEnd()
                             )
                         )
                     )

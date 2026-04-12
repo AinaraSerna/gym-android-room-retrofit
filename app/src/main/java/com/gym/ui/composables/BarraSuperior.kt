@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.gym.ui.features.ejercicios.EjercicioEvent
+import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
@@ -40,7 +41,8 @@ fun BarraSuperior(
     navController: NavHostController,
     onSesionEvent: (SesionEvent) -> Unit,
     onEjercicioEvent: (EjercicioEvent) -> Unit,
-    onRegistroEvent: (RegistrosEvent) -> Unit
+    onRegistroEvent: (RegistrosEvent) -> Unit,
+    onHistorialEvent: (HistorialEvent) -> Unit
 ) {
     TopAppBar(
         title = { Text(text = titulo) },
@@ -84,10 +86,11 @@ fun BarraSuperior(
                             )
                         }
                     }
-                    in 2..3 -> {
+                    in 1..3 -> {
                         IconButton(
                             onClick = {
                                 when (iOpcionSeleccionada) {
+                                    1 -> onHistorialEvent(HistorialEvent.OnGetRegistroDelHistorial(null))
                                     2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                                     3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
                                 }
@@ -143,6 +146,7 @@ fun BarraSuperiorPreview() {
         navController = NavHostController(context = LocalContext.current),
         onSesionEvent = {},
         onEjercicioEvent = {},
-        onRegistroEvent = {}
+        onRegistroEvent = {},
+        onHistorialEvent = {}
     )
 }

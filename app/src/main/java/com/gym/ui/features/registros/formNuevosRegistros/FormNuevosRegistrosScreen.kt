@@ -119,7 +119,7 @@ fun FormNuevosRegistrosScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(0.15f),
+                                .weight(0.18f),
                             contentAlignment = Alignment.TopCenter
                         ) {
                             Column(
@@ -136,14 +136,14 @@ fun FormNuevosRegistrosScreen(
                                         )
                                     ),
                                     color = CerezaOscuro,
-                                    letterSpacing = 1.sp
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(0.85f)
+                                .weight(0.82f)
                                 .clip(shape = MaterialTheme.shapes.large)
                                 .border(
                                     width = 1.dp,
@@ -243,7 +243,11 @@ fun FormNuevosRegistrosScreen(
                                                     .padding(bottom = 5.dp),
                                                 value = pesoValue,
                                                 onValueChange = {
-                                                    inputsPeso[key] = it
+                                                    inputsPeso[key] =
+                                                        if (it.contains(",")) it.replace(
+                                                            ",",
+                                                            "."
+                                                        ) else it
                                                 },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
