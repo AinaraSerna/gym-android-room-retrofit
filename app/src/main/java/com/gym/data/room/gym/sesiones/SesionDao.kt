@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.gym.data.room.gym.sesiones.SesionEntity
 
 @Dao
 interface SesionDao {

@@ -3,7 +3,6 @@ package com.gym.data.room.gym.ejercicios
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.gym.data.room.gym.sesiones.SesionEntity
 

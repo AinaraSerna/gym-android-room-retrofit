@@ -41,7 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.gym.ui.composables.SnackbarMensaje
+import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.sesiones.SesionUiState
@@ -334,7 +334,7 @@ fun DetallesEjercicioScreen(
                     onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                     onIrAtras()
                     scope.launch {
-                        SnackbarMensaje(
+                        snackbarMensaje(
                             mensaje = "Ejercicio guardado correctamente",
                             snackbarHostState = snackbarHostState
                         )

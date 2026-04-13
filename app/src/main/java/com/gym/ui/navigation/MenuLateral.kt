@@ -36,7 +36,6 @@ import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaPalo
 import kotlinx.coroutines.launch
-import kotlin.reflect.KClass
 
 @Composable
 fun MenuLateral(navController: NavHostController) {

@@ -22,7 +22,6 @@ class HistorialViewModel @Inject constructor(
 
     private val _historial = MutableStateFlow<List<HistorialRegistro>>(value = emptyList())
     val historial = _historial.asStateFlow()
-
     private val _entradaDeHistorialSeleccionado = MutableStateFlow<HistorialRegistro?>(value = null)
     val entradaDeHistorialSeleccionado = _entradaDeHistorialSeleccionado.asStateFlow()
     val registrosPorFecha = MutableStateFlow<List<RegistroUiState>>(value = emptyList())

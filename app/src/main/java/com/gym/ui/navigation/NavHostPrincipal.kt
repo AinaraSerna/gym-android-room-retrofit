@@ -295,7 +295,8 @@ fun NavHostPrincipal(
             formRegistrosPorFechaDestination(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                listaEjercicios =  emptyList()
             )
             detallesEjercicioDestination(
                 ejerciciosVM = ejerciciosVM,

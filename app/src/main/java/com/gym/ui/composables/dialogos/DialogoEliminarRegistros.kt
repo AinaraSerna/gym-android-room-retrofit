@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.gym.ui.composables.SnackbarMensaje
+import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaRojo
@@ -63,7 +63,7 @@ fun DialogoEliminarRegistros(
                     onHistorialEvent(HistorialEvent.OnDeleteRegistros)
                     setMostrarDialogo(false)
                     scope.launch {
-                        SnackbarMensaje(
+                        snackbarMensaje(
                             mensaje = "Registros eliminados correctamente",
                             snackbarHostState = snackbarHostState
                         )
