@@ -35,7 +35,7 @@ import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaOscuro
 import com.gym.ui.theme.RosaPalo
 import com.gym.ui.theme.RosaRojo
-import com.gym.ui.utils.fechaFormatoHispanoLocal
+import com.gym.ui.utils.fechaLargaFormatoHispano
 import java.time.LocalDate
 
 @Composable
@@ -65,12 +65,10 @@ fun HistorialScreen(
                         ),
                     onClick = {
                         if (estaSeleccionado) {
-                            onHistorialEvent(HistorialEvent.OnGetRegistroDelHistorial(fecha = null))
+                            onHistorialEvent(HistorialEvent.OnGetEntradaDelHistorial(fecha = null))
                         } else {
                             onHistorialEvent(
-                                HistorialEvent.OnGetRegistroDelHistorial(
-                                    registroDeHistorial.fecha
-                                )
+                                HistorialEvent.OnGetEntradaDelHistorial(registroDeHistorial.fecha)
                             )
                         }
                     },
@@ -92,7 +90,6 @@ fun HistorialScreen(
                                     color = if (estaSeleccionado) Cereza else Cereza.copy(alpha = 0.3f)
                                 )
                         )
-
                         Box(modifier = Modifier.fillMaxSize()) {
                             Column(
                                 modifier = Modifier
@@ -101,7 +98,7 @@ fun HistorialScreen(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = fechaFormatoHispanoLocal(fecha = registroDeHistorial.fecha),
+                                    text = fechaLargaFormatoHispano(fecha = registroDeHistorial.fecha),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = CerezaOscuro,
                                     fontWeight = FontWeight.ExtraBold
@@ -155,7 +152,7 @@ fun HistorialScreenPreview() {
     )
     HistorialScreen(
         historial = registrosDeHistorial,
-        registroDeHistorialSeleccionado = registrosDeHistorial[1],
+        registroDeHistorialSeleccionado = null,
         onHistorialEvent = {}
     )
 }

@@ -3,8 +3,9 @@ package com.gym.ui.composables.dialogos
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -16,20 +17,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gym.ui.composables.SnackbarMensaje
-import com.gym.ui.features.sesiones.SesionEvent
-import com.gym.ui.features.sesiones.SesionUiState
+import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DialogoEliminarSesion(
+fun DialogoEliminarRegistros(
     setMostrarDialogo: (Boolean) -> Unit,
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
-    onSesionEvent: (SesionEvent) -> Unit,
-    sesionSeleccionada: SesionUiState
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    fechaRegistroHistorialSeleccionado: String
 ) {
     AlertDialog(
         onDismissRequest = {},
@@ -39,12 +40,12 @@ fun DialogoEliminarSesion(
             ) {
                 Icon(
                     modifier = Modifier.padding(end = 6.dp),
-                    imageVector = Icons.AutoMirrored.Filled.ListAlt,
+                    imageVector = Icons.Filled.Checklist,
                     contentDescription = null,
                     tint = Cereza
                 )
                 Text(
-                    text = "Borrar sesión",
+                    text = "Borrar registros",
                     fontWeight = FontWeight.Bold,
                     color = Cereza
                 )
@@ -52,30 +53,30 @@ fun DialogoEliminarSesion(
         },
         text = {
             Text(
-                text = "¿Estás segura que quieres borrar la sesión \'${sesionSeleccionada.nombre}\'?",
+                text = "¿Estás segura que quieres eliminar los registros del ${fechaRegistroHistorialSeleccionado}?",
                 color = RosaRojo
             )
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSesionEvent(SesionEvent.OnDeleteSesion(sesionUiState = sesionSeleccionada))
+                    onHistorialEvent(HistorialEvent.OnDeleteRegistros)
                     setMostrarDialogo(false)
                     scope.launch {
                         SnackbarMensaje(
-                            mensaje = "Sesión borrada correctamente",
+                            mensaje = "Registros eliminados correctamente",
                             snackbarHostState = snackbarHostState
                         )
                     }
                 }
             ) {
-                Text(text = "Aceptar", color = Cereza)
+                Text(text = "Eliminar", color = Cereza)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = {
-                    onSesionEvent(SesionEvent.OnGetSesionById(null))
+                    onHistorialEvent(HistorialEvent.OnGetEntradaDelHistorial(fecha = null))
                     setMostrarDialogo(false)
                 }
             ) {

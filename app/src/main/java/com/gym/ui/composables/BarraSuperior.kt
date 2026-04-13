@@ -26,6 +26,7 @@ import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
+import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
 import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.theme.RosaFucsia
 
@@ -60,7 +61,16 @@ fun BarraSuperior(
                 }
 
                 in 4..7 -> {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                            when(iOpcionSeleccionada){
+                                4 -> onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+                                6 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                                7 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                            }
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver atrás",
@@ -90,7 +100,7 @@ fun BarraSuperior(
                         IconButton(
                             onClick = {
                                 when (iOpcionSeleccionada) {
-                                    1 -> onHistorialEvent(HistorialEvent.OnGetRegistroDelHistorial(null))
+                                    1 -> onHistorialEvent(HistorialEvent.OnGetEntradaDelHistorial(null))
                                     2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                                     3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
                                 }
@@ -104,6 +114,7 @@ fun BarraSuperior(
                         }
                         IconButton(onClick = {
                             when (iOpcionSeleccionada) {
+                                1 -> { navController.navigate(FormRegistrosPorFechaRoute) }
                                 2 -> { navController.navigate(DetallesEjercicioRoute) }
                                 3 -> { navController.navigate(DetallesSesionRoute) }
                             }

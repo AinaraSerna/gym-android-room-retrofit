@@ -3,7 +3,7 @@ package com.gym.ui.utils
 import java.time.LocalDate
 import java.util.Locale
 
-fun fechaFormatoHispanoLocal(fecha: LocalDate): String {
+fun fechaLargaFormatoHispano(fecha: LocalDate): String {
     return "${
         traduccionDia(diaIngles = fecha.dayOfWeek.name).replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(
@@ -12,6 +12,11 @@ fun fechaFormatoHispanoLocal(fecha: LocalDate): String {
         }
     }, ${fecha.dayOfMonth} de " +
             "${traduccionMes(mesIngles = fecha.month.name)} de ${fecha.year}"
+}
+
+fun fechaCortaFormatoHispano(fecha: LocalDate) : String{
+    val salidaMes = if(fecha.monthValue.toString().length == 1) "0${fecha.monthValue}" else "${fecha.monthValue}"
+    return "${fecha.dayOfMonth}/${salidaMes}/${fecha.year}"
 }
 
 private fun traduccionMes(mesIngles: String): String {

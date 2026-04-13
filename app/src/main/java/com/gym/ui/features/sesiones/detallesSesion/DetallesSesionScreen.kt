@@ -158,6 +158,7 @@ fun DetallesSesionScreen(
                             )
                         )
                     )
+                    onSesionEvent(SesionEvent.OnGetSesionById(null))
                     onIrAtras()
                     scope.launch {
                         SnackbarMensaje(

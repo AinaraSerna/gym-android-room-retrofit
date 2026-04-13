@@ -21,8 +21,8 @@ interface RegistroDao {
     suspend fun getHistorial(): List<HistorialRegistro>
 
     @Query(value = "select sesiones.nombre as 'nombreSesion', registros.fecha from registros inner join ejercicios " +
-            "inner join sesiones on registros.cod_ejercicio = ejercicios.id and ejercicios.id = registros.cod_ejercicio " +
-            "where registros.fecha = :fecha")
+            "inner join sesiones on registros.cod_ejercicio = ejercicios.id and ejercicios.cod_sesion = sesiones.id " +
+            "group by registros.fecha having registros.fecha = :fecha")
     suspend fun getRegistroDeHistorial(fecha: LocalDate) : HistorialRegistro
 
     @Query(value = "SELECT * FROM registros WHERE fecha = :fecha")

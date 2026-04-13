@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gym.ui.composables.SnackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioUiState
+import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.features.registros.RegistroUiState
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.theme.Cereza
@@ -62,6 +63,7 @@ import com.gym.ui.theme.RosaPalo
 import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun FormNuevosRegistrosScreen(
@@ -69,7 +71,8 @@ fun FormNuevosRegistrosScreen(
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     listaEjercicios: List<EjercicioUiState>,
-    onRegistrosEvent: (RegistrosEvent) -> Unit
+    onRegistrosEvent: (RegistrosEvent) -> Unit,
+    onHistorialEvent: (HistorialEvent) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -381,13 +384,16 @@ fun FormNuevosRegistrosScreen(
                                     val registro = RegistroUiState(
                                         codEjercicio = ejercicio.id,
                                         nombreEjercicio = ejercicio.nombre,
+                                        fecha = LocalDate.of(2026, 4,4),
                                         serie = i + 1,
                                         peso = peso,
                                         repeticiones = reps
                                     )
+                                    onHistorialEvent(HistorialEvent.OnGetHistorial)
                                     onRegistrosEvent(RegistrosEvent.OnInsertRegistro(registroUiState = registro))
                                 }
                             }
+                            onRegistrosEvent(RegistrosEvent.OnGetSesionById(null))
                             onIrAtras()
                             SnackbarMensaje(
                                 snackbarHostState = snackbarHostState,
@@ -449,6 +455,7 @@ fun FormNuevosRegistrosScreenPreview() {
                 serie = 1
             )
         ),
-        onRegistrosEvent = {}
+        onRegistrosEvent = {},
+        onHistorialEvent = {}
     )
 }

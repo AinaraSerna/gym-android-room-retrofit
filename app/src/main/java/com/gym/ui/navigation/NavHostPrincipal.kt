@@ -26,6 +26,7 @@ import com.gym.ui.composables.BarraInferior
 import com.gym.ui.composables.BarraSuperior
 import com.gym.ui.composables.BotonFlotante
 import com.gym.ui.composables.dialogos.DialogoEliminarEjercicio
+import com.gym.ui.composables.dialogos.DialogoEliminarRegistros
 import com.gym.ui.composables.dialogos.DialogoEliminarSesion
 import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
@@ -57,6 +58,7 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
+import com.gym.ui.utils.fechaCortaFormatoHispano
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,6 +112,9 @@ fun NavHostPrincipal(
     val (mostrarDialogoEliminarEjercicio, setMostrarDialogoEliminarEjercicio) = remember {
         mutableStateOf(value = false)
     }
+    val (mostrarDialogoEliminarRegistros, setMostrarDialogoEliminarRegistros) = remember {
+        mutableStateOf(value = false)
+    }
 
     Scaffold(
         topBar = {
@@ -132,12 +137,13 @@ fun NavHostPrincipal(
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
                     0 -> sesionRegistrosSeleccionada != null
-                    1 -> historialVM.registroHistorialSeleccionado.collectAsState().value != null
+                    1 -> historialVM.entradaDeHistorialSeleccionado.collectAsState().value != null
                     2 -> ejerciciosVM.ejercicioSeleccionado.collectAsState().value != null
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
                 },
                 setMostrarDialogoEliminacion = when (iOpcionNavegacionSeleccionada) {
+                    1 -> setMostrarDialogoEliminarRegistros
                     2 -> setMostrarDialogoEliminarEjercicio
                     3 -> setMostrarDialogoEliminarSesion
                     else -> { _ -> }
@@ -164,13 +170,21 @@ fun NavHostPrincipal(
         floatingActionButton = {
             when (iOpcionNavegacionSeleccionada) {
                 0 -> {
-                    val idSesion = registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
+                    val idSesion =
+                        registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
                     if (idSesion != null) {
                         BotonFlotante(
-                            onAccion = { navController.navigate(route = FormNuevosRegistrosRoute(codSesion = idSesion)) }
+                            onAccion = {
+                                navController.navigate(
+                                    route = FormNuevosRegistrosRoute(
+                                        codSesion = idSesion
+                                    )
+                                )
+                            }
                         )
                     }
                 }
+
                 in 2..3 -> {
                     BotonFlotante(
                         onAccion = {
@@ -236,6 +250,18 @@ fun NavHostPrincipal(
                     ?: EjercicioUiState()
             )
         }
+        // Historial
+        if (mostrarDialogoEliminarRegistros) {
+            DialogoEliminarRegistros(
+                setMostrarDialogo = setMostrarDialogoEliminarRegistros,
+                snackbarHostState = snackbarHostState,
+                scope = scope,
+                onHistorialEvent = historialVM::onHistorialEvent,
+                fechaRegistroHistorialSeleccionado = fechaCortaFormatoHispano(
+                    historialVM.entradaDeHistorialSeleccionado.collectAsState().value!!.fecha
+                )
+            )
+        }
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
@@ -263,7 +289,8 @@ fun NavHostPrincipal(
             formNuevosRegistrosDestination(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                onHistorialEvent = historialVM::onHistorialEvent
             )
             formRegistrosPorFechaDestination(
                 onIrAtras = { navController.popBackStack() },

@@ -331,6 +331,7 @@ fun DetallesEjercicioScreen(
                             )
                         )
                     )
+                    onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                     onIrAtras()
                     scope.launch {
                         SnackbarMensaje(
