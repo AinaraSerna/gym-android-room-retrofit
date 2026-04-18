@@ -28,7 +28,8 @@ fun NavGraphBuilder.formNuevosRegistrosDestination(
             scope = scope,
             snackbarHostState = snackbarHostState,
             onRegistrosEvent = formNuevosRegistrosVM::onRegistrosEvent,
-            onHistorialEvent = onHistorialEvent
+            onHistorialEvent = onHistorialEvent,
+            codSesion = formNuevosRegistrosVM.codSesion
         )
     }
 }

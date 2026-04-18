@@ -58,7 +58,6 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
-import com.gym.ui.utils.fechaCortaFormatoHispano
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -257,9 +256,7 @@ fun NavHostPrincipal(
                 snackbarHostState = snackbarHostState,
                 scope = scope,
                 onHistorialEvent = historialVM::onHistorialEvent,
-                fechaRegistroHistorialSeleccionado = fechaCortaFormatoHispano(
-                    historialVM.historialSeleccionado.collectAsState().value!!.fecha
-                )
+                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value!!
             )
         }
         NavHost(
@@ -296,7 +293,7 @@ fun NavHostPrincipal(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                listaEjercicios =  emptyList()
+                listaEjercicios = emptyList()
             )
             detallesEjercicioDestination(
                 ejerciciosVM = ejerciciosVM,

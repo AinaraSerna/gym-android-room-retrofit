@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.historial.HistorialEvent
+import com.gym.ui.features.historial.HistorialUiState
 import com.gym.ui.features.registros.RegistroUiState
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.theme.Cereza
@@ -71,7 +72,8 @@ fun FormNuevosRegistrosScreen(
     snackbarHostState: SnackbarHostState,
     listaEjercicios: List<EjercicioUiState>,
     onRegistrosEvent: (RegistrosEvent) -> Unit,
-    onHistorialEvent: (HistorialEvent) -> Unit
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    codSesion: Int?
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -375,28 +377,44 @@ fun FormNuevosRegistrosScreen(
                         .size(width = 120.dp, height = 50.dp),
                     onClick = {
                         scope.launch {
-                            listaEjercicios.forEach { ejercicio ->
-                                for (i in 0 until ejercicio.serie) {
-                                    val key = "${ejercicio.id}-$i"
-                                    val peso = inputsPeso[key]?.toFloatOrNull() ?: 0f
-                                    val reps = inputsReps[key] ?: ""
+                            onHistorialEvent(
+                                HistorialEvent.OnInsertHistorial(
+                                    historialUiState = HistorialUiState(
+                                        codSesion = codSesion
+                                    ),
+                                    onResult = { codHistorial ->
+                                        listaEjercicios.forEach { ejercicio ->
+                                            for (i in 0 until ejercicio.serie) {
+                                                val key = "${ejercicio.id}-$i"
+                                                val peso = inputsPeso[key]?.toFloatOrNull() ?: 0f
+                                                val reps = inputsReps[key] ?: ""
 
-                                    val registro = RegistroUiState(
-                                        codEjercicio = ejercicio.id,
-                                        nombreEjercicio = ejercicio.nombre,
-                                        serie = i + 1,
-                                        peso = peso,
-                                        repeticiones = reps
-                                    )
-                                    onHistorialEvent(HistorialEvent.OnGetHistorial)
-                                    onRegistrosEvent(RegistrosEvent.OnInsertRegistro(registroUiState = registro))
-                                }
-                            }
-                            onIrAtras()
-                            onRegistrosEvent(RegistrosEvent.OnGetSesionById(null))
-                            snackbarMensaje(
-                                snackbarHostState = snackbarHostState,
-                                mensaje = "Registros guardados correctamente"
+                                                val registro = RegistroUiState(
+                                                    codHistorial = codHistorial,
+                                                    codEjercicio = ejercicio.id,
+                                                    nombreEjercicio = ejercicio.nombre,
+                                                    serie = i + 1,
+                                                    peso = peso,
+                                                    repeticiones = reps
+                                                )
+                                                onRegistrosEvent(
+                                                    RegistrosEvent.OnInsertRegistro(
+                                                        registroUiState = registro
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        onHistorialEvent(HistorialEvent.OnGetHistorial)
+                                        onRegistrosEvent(RegistrosEvent.OnGetSesionById(null))
+                                        onIrAtras()
+                                        scope.launch {
+                                            snackbarMensaje(
+                                                snackbarHostState = snackbarHostState,
+                                                mensaje = "Registros guardados correctamente"
+                                            )
+                                        }
+                                    }
+                                )
                             )
                         }
                     },
@@ -455,6 +473,7 @@ fun FormNuevosRegistrosScreenPreview() {
             )
         ),
         onRegistrosEvent = {},
-        onHistorialEvent = {}
+        onHistorialEvent = {},
+        codSesion = 1
     )
 }

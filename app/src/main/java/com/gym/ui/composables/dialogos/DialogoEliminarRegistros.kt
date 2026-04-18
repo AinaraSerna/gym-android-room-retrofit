@@ -16,10 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.gym.data.room.gym.historial.HistorialConNombreSesionDTO
 import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaRojo
+import com.gym.ui.utils.fechaCortaFormatoHispano
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -30,7 +32,7 @@ fun DialogoEliminarRegistros(
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
     onHistorialEvent: (HistorialEvent) -> Unit,
-    fechaRegistroHistorialSeleccionado: String
+    historialSeleccionado: HistorialConNombreSesionDTO
 ) {
     AlertDialog(
         onDismissRequest = {},
@@ -53,14 +55,16 @@ fun DialogoEliminarRegistros(
         },
         text = {
             Text(
-                text = "¿Estás segura que quieres eliminar los registros del ${fechaRegistroHistorialSeleccionado}?",
+                text = "¿Estás segura que quieres eliminar los registros del ${
+                    fechaCortaFormatoHispano(historialSeleccionado.fecha)
+                } (${historialSeleccionado.nombreSesion})?",
                 color = RosaRojo
             )
         },
         confirmButton = {
             TextButton(
                 onClick = {
-//                    onHistorialEvent(HistorialEvent.OnDeleteRegistros)
+                    onHistorialEvent(HistorialEvent.OnDeleteRegistros(id = historialSeleccionado.id))
                     setMostrarDialogo(false)
                     scope.launch {
                         snackbarMensaje(

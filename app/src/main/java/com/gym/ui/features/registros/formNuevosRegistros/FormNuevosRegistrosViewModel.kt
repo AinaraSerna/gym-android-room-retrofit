@@ -23,7 +23,7 @@ class FormNuevosRegistrosViewModel @Inject constructor(
     private val ejerciciosRepository: EjercicioRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val codSesion = savedStateHandle.get<Int>("codSesion")
+    val codSesion = savedStateHandle.get<Int>("codSesion")
     private val _listaEjerciciosDeSesion =
         MutableStateFlow<List<EjercicioUiState>>(value = emptyList())
     val listaEjerciciosDeSesion = _listaEjerciciosDeSesion.asStateFlow()

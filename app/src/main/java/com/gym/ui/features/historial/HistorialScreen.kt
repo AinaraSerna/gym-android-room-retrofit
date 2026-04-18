@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gym.data.room.gym.historial.HistorialConNombreSesionDTO
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaOscuro
 import com.gym.ui.theme.RosaPalo
@@ -39,8 +40,8 @@ import java.time.LocalDate
 
 @Composable
 fun HistorialScreen(
-    historial: List<HistorialUiState>,
-    historialSeleccionado: HistorialUiState?,
+    historial: List<HistorialConNombreSesionDTO>,
+    historialSeleccionado: HistorialConNombreSesionDTO?,
     onHistorialEvent: (HistorialEvent) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -51,8 +52,8 @@ fun HistorialScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp),
             contentPadding = PaddingValues(18.dp)
         ) {
-            items(historial) { registroDeHistorial ->
-                val estaSeleccionado = registroDeHistorial == historialSeleccionado
+            items(historial) { entradaDeHistorial ->
+                val estaSeleccionado = entradaDeHistorial == historialSeleccionado
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -67,7 +68,7 @@ fun HistorialScreen(
                             onHistorialEvent(HistorialEvent.OnGetHistorialById(id = null))
                         } else {
                             onHistorialEvent(
-                                HistorialEvent.OnGetHistorialById(registroDeHistorial.id)
+                                HistorialEvent.OnGetHistorialById(entradaDeHistorial.id)
                             )
                         }
                     },
@@ -97,14 +98,14 @@ fun HistorialScreen(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = fechaLargaFormatoHispano(fecha = registroDeHistorial.fecha),
+                                    text = fechaLargaFormatoHispano(fecha = entradaDeHistorial.fecha),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = CerezaOscuro,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = registroDeHistorial.codSesion.toString(),
+                                    text = entradaDeHistorial.nombreSesion,
                                     color = RosaRojo,
                                     style = MaterialTheme.typography.bodyMedium,
                                     maxLines = 2,
@@ -140,12 +141,16 @@ fun HistorialScreen(
 @Composable
 fun HistorialScreenPreview() {
     val historial = listOf(
-        HistorialUiState(
+        HistorialConNombreSesionDTO(
+            id  =  2,
             codSesion = 2,
+            nombreSesion = "2-J",
             fecha = LocalDate.now()
         ),
-        HistorialUiState(
+        HistorialConNombreSesionDTO(
+            id  =  1,
             codSesion = 1,
+            nombreSesion = "1-M",
             fecha = LocalDate.now().minusDays(3)
         )
     )
