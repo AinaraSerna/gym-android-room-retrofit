@@ -94,8 +94,8 @@ fun NavHostPrincipal(
     }
     val sesionesVM = hiltViewModel<SesionesViewModel>()
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
-    val registrosVM = hiltViewModel<RegistrosViewModel>()
     val historialVM = hiltViewModel<HistorialViewModel>()
+    val registrosVM = hiltViewModel<RegistrosViewModel>()
 
     val sesiones = sesionesVM.sesiones.collectAsState().value
     val sesionRegistrosSeleccionada = registrosVM.sesionRegistrosSeleccionada.collectAsState().value
@@ -137,7 +137,7 @@ fun NavHostPrincipal(
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
                     0 -> sesionRegistrosSeleccionada != null
-                    1 -> historialVM.entradaDeHistorialSeleccionado.collectAsState().value != null
+                    1 -> historialVM.historialSeleccionado.collectAsState().value != null
                     2 -> ejerciciosVM.ejercicioSeleccionado.collectAsState().value != null
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
@@ -258,7 +258,7 @@ fun NavHostPrincipal(
                 scope = scope,
                 onHistorialEvent = historialVM::onHistorialEvent,
                 fechaRegistroHistorialSeleccionado = fechaCortaFormatoHispano(
-                    historialVM.entradaDeHistorialSeleccionado.collectAsState().value!!.fecha
+                    historialVM.historialSeleccionado.collectAsState().value!!.fecha
                 )
             )
         }

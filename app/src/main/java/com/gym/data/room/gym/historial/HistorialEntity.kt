@@ -1,14 +1,14 @@
-package com.gym.data.room.gym.ejercicios
+package com.gym.data.room.gym.historial
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.gym.data.room.gym.sesiones.SesionEntity
+import java.time.LocalDate
 
 @Entity(
-    tableName = "ejercicios",
+    tableName = "historial",
     foreignKeys = [
         ForeignKey(
             entity = SesionEntity::class,
@@ -16,20 +16,13 @@ import com.gym.data.room.gym.sesiones.SesionEntity
             childColumns = ["cod_sesion"],
             onDelete = ForeignKey.SET_NULL
         )
-    ],
-    indices = [Index("cod_sesion")]
+    ]
 )
-data class EjercicioEntity(
+data class HistorialEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    @ColumnInfo(name = "orden")
-    val orden: Int,
-    @ColumnInfo(name = "nombre")
-    val nombre: String,
-    @ColumnInfo(name = "serie")
-    val serie: Int,
+    val id: Int,
     @ColumnInfo(name = "cod_sesion")
     val codSesion: Int?,
-    @ColumnInfo(name = "notas")
-    val notas: String
+    @ColumnInfo(name = "fecha")
+    val fecha: LocalDate
 )

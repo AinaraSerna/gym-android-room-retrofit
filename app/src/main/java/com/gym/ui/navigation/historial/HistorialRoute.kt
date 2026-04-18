@@ -16,7 +16,7 @@ fun NavGraphBuilder.historialDestination(
     composable<HistorialRoute> {
         HistorialScreen(
             historial = historialVM.historial.collectAsState().value,
-            registroDeHistorialSeleccionado = historialVM.entradaDeHistorialSeleccionado.collectAsState().value,
+            historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value,
             onHistorialEvent = historialVM::onHistorialEvent
         )
     }

@@ -2,29 +2,23 @@ package com.gym.ui.features.historial
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gym.models.repositorios.RegistrosRepository
-import com.gym.data.room.gym.registros.HistorialRegistro
-import com.gym.models.toRegistro
-import com.gym.ui.features.registros.RegistroUiState
-import com.gym.ui.features.registros.toRegistro
-import com.gym.ui.features.registros.toRegistroUiState
+import com.gym.models.repositorios.HistorialRepository
+import com.gym.models.toHistorial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HistorialViewModel @Inject constructor(
-    private val repository: RegistrosRepository
+    private val repository: HistorialRepository
 ) : ViewModel() {
 
-    private val _historial = MutableStateFlow<List<HistorialRegistro>>(value = emptyList())
+    private val _historial = MutableStateFlow<List<HistorialUiState>>(value = emptyList())
     val historial = _historial.asStateFlow()
-    private val _entradaDeHistorialSeleccionado = MutableStateFlow<HistorialRegistro?>(value = null)
-    val entradaDeHistorialSeleccionado = _entradaDeHistorialSeleccionado.asStateFlow()
-    val registrosPorFecha = MutableStateFlow<List<RegistroUiState>>(value = emptyList())
+    private val _historialSeleccionado = MutableStateFlow<HistorialUiState?>(value = null)
+    val historialSeleccionado = _historialSeleccionado.asStateFlow()
 
     init {
         getHistorial()
@@ -33,50 +27,24 @@ class HistorialViewModel @Inject constructor(
     fun onHistorialEvent(event: HistorialEvent) {
         when (event) {
             is HistorialEvent.OnGetHistorial -> getHistorial()
-            is HistorialEvent.OnGetEntradaDelHistorial -> getEntradaDeHistorial(event.fecha)
-            is HistorialEvent.OnUpdateRegistro -> updateRegistro(event.registro)
-            is HistorialEvent.OnDeleteRegistros -> deleteRegistros()
+            is HistorialEvent.OnGetHistorialById -> getEntradaDelHistorial(event.id)
         }
     }
 
     private fun getHistorial() {
         viewModelScope.launch {
-            _historial.value = repository.getHistorial()
+            _historial.value = repository.getAll().map { it.toHistorial().toHistorialUiState() }
         }
     }
 
-    private fun getEntradaDeHistorial(fecha: LocalDate?) {
+    private fun getEntradaDelHistorial(id: Int?) {
         viewModelScope.launch {
-            if (fecha == null) {
-                _entradaDeHistorialSeleccionado.value = null
-                registrosPorFecha.value = emptyList()
+            if (id != null) {
+                _historialSeleccionado.value = repository.getById(id).toHistorial().toHistorialUiState()
             } else {
-                _entradaDeHistorialSeleccionado.value = repository.getRegistroDeHistorial(fecha)
-                getRegistrosPorFecha(fecha)
+                _historialSeleccionado.value = null
             }
         }
     }
 
-    private suspend fun getRegistrosPorFecha(fecha: LocalDate) {
-        registrosPorFecha.value =
-            repository.getRegistrosByFecha(fecha).map { it.toRegistro().toRegistroUiState() }
-    }
-
-    private fun updateRegistro(registro: RegistroUiState) {
-        viewModelScope.launch {
-            repository.update(registro = registro.toRegistro())
-            getHistorial()
-        }
-    }
-
-    private fun deleteRegistros() {
-        viewModelScope.launch {
-            registrosPorFecha.value.forEach {
-                repository.delete(registro = it.toRegistro())
-            }
-            registrosPorFecha.value = emptyList()
-            _entradaDeHistorialSeleccionado.value = null
-            getHistorial()
-        }
-    }
 }

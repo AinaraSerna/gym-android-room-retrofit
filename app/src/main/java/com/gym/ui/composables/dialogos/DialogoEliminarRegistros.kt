@@ -60,7 +60,7 @@ fun DialogoEliminarRegistros(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onHistorialEvent(HistorialEvent.OnDeleteRegistros)
+//                    onHistorialEvent(HistorialEvent.OnDeleteRegistros)
                     setMostrarDialogo(false)
                     scope.launch {
                         snackbarMensaje(
@@ -76,7 +76,7 @@ fun DialogoEliminarRegistros(
         dismissButton = {
             TextButton(
                 onClick = {
-                    onHistorialEvent(HistorialEvent.OnGetEntradaDelHistorial(fecha = null))
+                    onHistorialEvent(HistorialEvent.OnGetHistorialById(id = null))
                     setMostrarDialogo(false)
                 }
             ) {

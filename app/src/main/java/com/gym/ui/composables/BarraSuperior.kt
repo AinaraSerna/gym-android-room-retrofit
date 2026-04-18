@@ -100,7 +100,7 @@ fun BarraSuperior(
                         IconButton(
                             onClick = {
                                 when (iOpcionSeleccionada) {
-                                    1 -> onHistorialEvent(HistorialEvent.OnGetEntradaDelHistorial(null))
+                                    1 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
                                     2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                                     3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
                                 }
