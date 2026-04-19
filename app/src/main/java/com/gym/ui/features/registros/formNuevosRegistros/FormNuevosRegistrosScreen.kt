@@ -22,10 +22,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,8 +35,12 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -65,6 +71,7 @@ import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormNuevosRegistrosScreen(
     onIrAtras: () -> Unit,
@@ -79,6 +86,7 @@ fun FormNuevosRegistrosScreen(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        val tooltipState = rememberTooltipState()
         val pager = rememberPagerState(
             pageCount = { listaEjercicios.size },
             initialPage = 0,
@@ -105,7 +113,7 @@ fun FormNuevosRegistrosScreen(
                 val ejercicio = listaEjercicios[indice]
                 ElevatedCard(
                     modifier = Modifier
-                        .aspectRatio(0.85f)
+                        .aspectRatio(0.8f)
                         .padding(all = 16.dp),
                     colors = CardDefaults.elevatedCardColors(
                         containerColor = RosaPalo
@@ -120,19 +128,24 @@ fun FormNuevosRegistrosScreen(
                             .padding(all = 20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Box(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(0.18f),
-                            contentAlignment = Alignment.TopCenter
+                                .weight(0.15f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start
+                            IconButton(modifier = Modifier.weight(0.15f), onClick = {}) { }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .weight(0.7f),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = ejercicio.nombre.uppercase(),
                                     fontWeight = FontWeight.Black,
-                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                    style = MaterialTheme.typography.titleLarge.copy(
                                         shadow = Shadow(
                                             color = Color.White.copy(alpha = 0.15f),
                                             offset = Offset(x = 4f, y = 4f),
@@ -144,11 +157,29 @@ fun FormNuevosRegistrosScreen(
                                     letterSpacing = 1.sp
                                 )
                             }
+                            TooltipBox(
+                                modifier = Modifier.weight(0.15f),
+                                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(
+                                    spacingBetweenTooltipAndAnchor = (-5).dp
+                                ),
+                                tooltip = {
+                                    PlainTooltip { Text(text = ejercicio.notas) }
+                                },
+                                state = tooltipState
+                            ) {
+                                IconButton(onClick = { scope.launch { tooltipState.show() } }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Info,
+                                        contentDescription = "Información del ejercicio",
+                                        tint = CerezaOscuro
+                                    )
+                                }
+                            }
                         }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(0.82f)
+                                .weight(0.67f)
                                 .clip(shape = MaterialTheme.shapes.large)
                                 .border(
                                     width = 1.dp,
@@ -449,7 +480,7 @@ fun FormNuevosRegistrosScreenPreview() {
         listaEjercicios = listOf(
             EjercicioUiState(
                 id = 1,
-                nombre = "Ejercicio 1",
+                nombre = "Ejercicio con nombre largo",
                 notas = "Descripción del ejercicio 1",
                 codSesion = 1,
                 orden = 1,
