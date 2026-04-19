@@ -40,9 +40,9 @@ import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.ejercicios.EjerciciosRoute
 import com.gym.ui.navigation.ejercicios.detallesEjercicioDestination
 import com.gym.ui.navigation.ejercicios.ejerciciosDestination
-import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
+import com.gym.ui.navigation.historial.FormRegistrosDeHistorial
 import com.gym.ui.navigation.historial.HistorialRoute
-import com.gym.ui.navigation.historial.formRegistrosPorFechaDestination
+import com.gym.ui.navigation.historial.formRegistrosDeHistorialDestination
 import com.gym.ui.navigation.historial.historialDestination
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
 import com.gym.ui.navigation.menulateral.RegistrosApiRoute
@@ -81,7 +81,7 @@ fun NavHostPrincipal(
                 destino.hasRoute<EjerciciosRoute>() -> 2
                 destino.hasRoute<SesionesRoute>() -> 3
                 destino.hasRoute<FormNuevosRegistrosRoute>() -> 4
-                destino.hasRoute<FormRegistrosPorFechaRoute>() -> 5
+                destino.hasRoute<FormRegistrosDeHistorial>() -> 5
                 destino.hasRoute<DetallesEjercicioRoute>() -> 6
                 destino.hasRoute<DetallesSesionRoute>() -> 7
                 destino.hasRoute<SesionesApiRoute>() -> 8
@@ -152,7 +152,8 @@ fun NavHostPrincipal(
                 onSesionEvent = sesionesVM::onSesionEvent,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 onRegistroEvent = registrosVM::onRegistrosEvent,
-                onHistorialEvent = historialVM::onHistorialEvent
+                onHistorialEvent = historialVM::onHistorialEvent,
+                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value
             )
         },
         bottomBar = {
@@ -169,8 +170,7 @@ fun NavHostPrincipal(
         floatingActionButton = {
             when (iOpcionNavegacionSeleccionada) {
                 0 -> {
-                    val idSesion =
-                        registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
+                    val idSesion = registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
                     if (idSesion != null) {
                         BotonFlotante(
                             onAccion = {
@@ -289,11 +289,11 @@ fun NavHostPrincipal(
                 snackbarHostState = snackbarHostState,
                 onHistorialEvent = historialVM::onHistorialEvent
             )
-            formRegistrosPorFechaDestination(
+            formRegistrosDeHistorialDestination(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                listaEjercicios = emptyList()
+                historialVM = historialVM
             )
             detallesEjercicioDestination(
                 ejerciciosVM = ejerciciosVM,

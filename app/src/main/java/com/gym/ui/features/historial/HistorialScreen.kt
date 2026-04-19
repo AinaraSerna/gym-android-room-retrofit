@@ -67,9 +67,7 @@ fun HistorialScreen(
                         if (estaSeleccionado) {
                             onHistorialEvent(HistorialEvent.OnGetHistorialById(id = null))
                         } else {
-                            onHistorialEvent(
-                                HistorialEvent.OnGetHistorialById(entradaDeHistorial.id)
-                            )
+                            onHistorialEvent(HistorialEvent.OnGetHistorialById(entradaDeHistorial.id))
                         }
                     },
                     colors = CardDefaults.elevatedCardColors(

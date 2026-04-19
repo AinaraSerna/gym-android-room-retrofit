@@ -21,12 +21,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.gym.data.room.gym.historial.HistorialConNombreSesionDTO
 import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
-import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
+import com.gym.ui.navigation.historial.FormRegistrosDeHistorial
 import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.theme.RosaFucsia
 
@@ -43,7 +44,8 @@ fun BarraSuperior(
     onSesionEvent: (SesionEvent) -> Unit,
     onEjercicioEvent: (EjercicioEvent) -> Unit,
     onRegistroEvent: (RegistrosEvent) -> Unit,
-    onHistorialEvent: (HistorialEvent) -> Unit
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    historialSeleccionado: HistorialConNombreSesionDTO?
 ) {
     TopAppBar(
         title = { Text(text = titulo) },
@@ -64,7 +66,7 @@ fun BarraSuperior(
                     IconButton(
                         onClick = {
                             navController.popBackStack()
-                            when(iOpcionSeleccionada){
+                            when (iOpcionSeleccionada) {
                                 4 -> onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
                                 6 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
                                 7 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
@@ -82,57 +84,59 @@ fun BarraSuperior(
         },
         actions = {
             if (opcionSeleccionada) {
-                when (iOpcionSeleccionada) {
-                    0 -> {
-                        IconButton(
-                            modifier = Modifier.padding(end = 20.dp),
-                            onClick = {
-                                onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
-                            }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "Undo",
-                                tint = Color.White
-                            )
+                IconButton(
+                    modifier = if (iOpcionSeleccionada == 0) Modifier.padding(end = 20.dp) else Modifier,
+                    onClick = {
+                        when (iOpcionSeleccionada) {
+                            0 -> onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+                            1 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
+                            2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                            3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
                         }
                     }
-                    in 1..3 -> {
-                        IconButton(
-                            onClick = {
-                                when (iOpcionSeleccionada) {
-                                    1 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
-                                    2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
-                                    3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Undo,
+                        contentDescription = "Deshacer",
+                        tint = Color.White
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        when (iOpcionSeleccionada) {
+                            1 -> {
+                                val codHistorial = historialSeleccionado?.id
+                                val codSesion = historialSeleccionado?.codSesion
+                                if (codHistorial != null && codSesion != null) {
+                                    navController.navigate(
+                                        route = FormRegistrosDeHistorial(
+                                            codHistorial = codHistorial,
+                                            codSesion = codSesion
+                                        )
+                                    )
                                 }
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "Deshacer",
-                                tint = Color.White
-                            )
-                        }
-                        IconButton(onClick = {
-                            when (iOpcionSeleccionada) {
-                                1 -> { navController.navigate(FormRegistrosPorFechaRoute) }
-                                2 -> { navController.navigate(DetallesEjercicioRoute) }
-                                3 -> { navController.navigate(DetallesSesionRoute) }
+                            2 -> {
+                                navController.navigate(DetallesEjercicioRoute)
                             }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Editar",
-                                tint = Color.White
-                            )
-                        }
-                        IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Eliminar",
-                                tint = Color.White
-                            )
+                            3 -> {
+                                navController.navigate(DetallesSesionRoute)
+                            }
                         }
                     }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Editar",
+                        tint = Color.White
+                    )
+                }
+                IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Eliminar",
+                        tint = Color.White
+                    )
                 }
             }
         },
@@ -158,6 +162,7 @@ fun BarraSuperiorPreview() {
         onSesionEvent = {},
         onEjercicioEvent = {},
         onRegistroEvent = {},
-        onHistorialEvent = {}
+        onHistorialEvent = {},
+        historialSeleccionado = null
     )
 }
