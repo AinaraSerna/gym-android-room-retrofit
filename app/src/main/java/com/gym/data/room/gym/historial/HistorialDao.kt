@@ -22,7 +22,7 @@ interface HistorialDao {
             "WHERE h.id = :id")
     suspend fun getByIdConNombreSesion(id: Int): HistorialConNombreSesionDTO
 
-    @Query(value = "SELECT * FROM historial WHERE cod_sesion = :codSesion")
+    @Query(value = "SELECT * FROM historial WHERE cod_sesion = :codSesion ORDER BY fecha DESC")
     suspend fun getByCodSesion(codSesion: Int): List<HistorialEntity>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)

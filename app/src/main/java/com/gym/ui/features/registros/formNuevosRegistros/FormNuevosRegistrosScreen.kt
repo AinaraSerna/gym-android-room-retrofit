@@ -80,7 +80,8 @@ fun FormNuevosRegistrosScreen(
     listaEjercicios: List<EjercicioUiState>,
     onRegistrosEvent: (RegistrosEvent) -> Unit,
     onHistorialEvent: (HistorialEvent) -> Unit,
-    codSesion: Int?
+    codSesion: Int?,
+    ultimosRegistros: Map<String, Pair<String, String>>
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -235,9 +236,10 @@ fun FormNuevosRegistrosScreen(
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 items(count = ejercicio.serie) { serieIndex ->
-                                    val key = "${ejercicio.id}-$serieIndex"
+                                    val key = "${ejercicio.id}-${serieIndex + 1}"
                                     val pesoValue = inputsPeso[key] ?: ""
                                     val repsValue = inputsReps[key] ?: ""
+                                    val registroAnterior = ultimosRegistros[key] ?: Pair("", "")
 
                                     Row(
                                         modifier = Modifier
@@ -285,6 +287,7 @@ fun FormNuevosRegistrosScreen(
                                                             "."
                                                         ) else it
                                                 },
+                                                placeholder = { Text(text = registroAnterior.first) },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
                                                 ),
@@ -318,6 +321,7 @@ fun FormNuevosRegistrosScreen(
                                                             ":"
                                                         ) else it
                                                 },
+                                                placeholder = { Text(text = registroAnterior.second) },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
                                                 ),
@@ -415,8 +419,8 @@ fun FormNuevosRegistrosScreen(
                                     ),
                                     onResult = { codHistorial ->
                                         listaEjercicios.forEach { ejercicio ->
-                                            for (i in 0 until ejercicio.serie) {
-                                                val key = "${ejercicio.id}-$i"
+                                            for (serie in 1..ejercicio.serie) {
+                                                val key = "${ejercicio.id}-$serie"
                                                 val peso = inputsPeso[key]?.toFloatOrNull() ?: 0f
                                                 val reps = inputsReps[key] ?: ""
 
@@ -424,14 +428,12 @@ fun FormNuevosRegistrosScreen(
                                                     codHistorial = codHistorial,
                                                     codEjercicio = ejercicio.id,
                                                     nombreEjercicio = ejercicio.nombre,
-                                                    serie = i + 1,
+                                                    serie = serie,
                                                     peso = peso,
                                                     repeticiones = reps
                                                 )
                                                 onRegistrosEvent(
-                                                    RegistrosEvent.OnInsertRegistro(
-                                                        registroUiState = registro
-                                                    )
+                                                    RegistrosEvent.OnInsertRegistro(registroUiState = registro)
                                                 )
                                             }
                                         }
@@ -505,6 +507,7 @@ fun FormNuevosRegistrosScreenPreview() {
         ),
         onRegistrosEvent = {},
         onHistorialEvent = {},
-        codSesion = 1
+        codSesion = 1,
+        ultimosRegistros = mapOf()
     )
 }

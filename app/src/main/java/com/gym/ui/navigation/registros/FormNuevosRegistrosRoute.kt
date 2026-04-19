@@ -29,7 +29,8 @@ fun NavGraphBuilder.formNuevosRegistrosDestination(
             snackbarHostState = snackbarHostState,
             onRegistrosEvent = formNuevosRegistrosVM::onRegistrosEvent,
             onHistorialEvent = onHistorialEvent,
-            codSesion = formNuevosRegistrosVM.codSesion
+            codSesion = formNuevosRegistrosVM.codSesion,
+            ultimosRegistros = formNuevosRegistrosVM.ultimosRegistros.collectAsState().value
         )
     }
 }
