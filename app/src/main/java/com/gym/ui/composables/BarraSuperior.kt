@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -45,8 +46,18 @@ fun BarraSuperior(
     onEjercicioEvent: (EjercicioEvent) -> Unit,
     onRegistroEvent: (RegistrosEvent) -> Unit,
     onHistorialEvent: (HistorialEvent) -> Unit,
-    historialSeleccionado: HistorialConNombreSesionDTO?
+    historialSeleccionado: HistorialConNombreSesionDTO?,
+    salirDeForm: Boolean,
+    setMostrarDialogoSalirDeInsercion: (Boolean) -> Unit
 ) {
+    LaunchedEffect(key1 = salirDeForm) {
+        if (salirDeForm && iOpcionSeleccionada == 4) {
+            navController.popBackStack()
+            onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+            onRegistroEvent(RegistrosEvent.OnSalirDeForm(salir = false))
+        }
+    }
+
     TopAppBar(
         title = { Text(text = titulo) },
         scrollBehavior = comportamientoAnteScroll,
@@ -65,11 +76,15 @@ fun BarraSuperior(
                 in 4..7 -> {
                     IconButton(
                         onClick = {
-                            navController.popBackStack()
-                            when (iOpcionSeleccionada) {
-                                4 -> onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
-                                6 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
-                                7 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                            if (iOpcionSeleccionada == 4) {
+                                setMostrarDialogoSalirDeInsercion(true)
+                            } else {
+                                navController.popBackStack()
+                                when (iOpcionSeleccionada) {
+                                    5 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
+                                    6 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                                    7 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                                }
                             }
                         }
                     ) {
@@ -167,6 +182,8 @@ fun BarraSuperiorPreview() {
         onEjercicioEvent = {},
         onRegistroEvent = {},
         onHistorialEvent = {},
-        historialSeleccionado = null
+        historialSeleccionado = null,
+        salirDeForm = false,
+        setMostrarDialogoSalirDeInsercion = {}
     )
 }

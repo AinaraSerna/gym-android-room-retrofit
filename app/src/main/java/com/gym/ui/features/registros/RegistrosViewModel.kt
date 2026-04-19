@@ -22,6 +22,9 @@ class RegistrosViewModel @Inject constructor(
     private var _sesionRegistrosSeleccionda = MutableStateFlow<SesionUiState?>(value = null)
     val sesionRegistrosSeleccionada = _sesionRegistrosSeleccionda.asStateFlow()
 
+    private val _salirDeForm = MutableStateFlow<Boolean>(value = false)
+    val salirDeForm = _salirDeForm.asStateFlow()
+
     init {
         getSesiones()
     }
@@ -30,7 +33,8 @@ class RegistrosViewModel @Inject constructor(
         when (event) {
             is RegistrosEvent.OnGetSesiones -> getSesiones()
             is RegistrosEvent.OnGetSesionById -> getSesionById(event.id)
-            else -> {}
+            is RegistrosEvent.OnInsertRegistro -> {}
+            is RegistrosEvent.OnSalirDeForm -> _salirDeForm.value = event.salir
         }
     }
 

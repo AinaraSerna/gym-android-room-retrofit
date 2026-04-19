@@ -28,6 +28,7 @@ import com.gym.ui.composables.BotonFlotante
 import com.gym.ui.composables.dialogos.DialogoEliminarEjercicio
 import com.gym.ui.composables.dialogos.DialogoEliminarRegistros
 import com.gym.ui.composables.dialogos.DialogoEliminarSesion
+import com.gym.ui.composables.dialogos.DialogoSalirDeInsercionRegistros
 import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
 import com.gym.ui.features.ejercicios.EjercicioUiState
@@ -114,6 +115,9 @@ fun NavHostPrincipal(
     val (mostrarDialogoEliminarRegistros, setMostrarDialogoEliminarRegistros) = remember {
         mutableStateOf(value = false)
     }
+    val (mostrarDialogoSalirDeInsercion, setMostrarDialogoSalirDeInsercion) = remember {
+        mutableStateOf(value = false)
+    }
 
     Scaffold(
         topBar = {
@@ -153,7 +157,9 @@ fun NavHostPrincipal(
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
                 onRegistroEvent = registrosVM::onRegistrosEvent,
                 onHistorialEvent = historialVM::onHistorialEvent,
-                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value
+                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value,
+                salirDeForm = registrosVM.salirDeForm.collectAsState().value,
+                setMostrarDialogoSalirDeInsercion = setMostrarDialogoSalirDeInsercion
             )
         },
         bottomBar = {
@@ -228,10 +234,7 @@ fun NavHostPrincipal(
             InsertarEjercicioDialogo(
                 setMostrarDialogoInsertarEjercicio = setMostrarDialogoInsertarEjercicio,
                 ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map {
-                    Pair(
-                        it.nombre,
-                        it.codSesion
-                    )
+                    Pair(it.nombre, it.codSesion)
                 },
                 sesiones = sesionesDesplegable,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
@@ -257,6 +260,13 @@ fun NavHostPrincipal(
                 scope = scope,
                 onHistorialEvent = historialVM::onHistorialEvent,
                 historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value!!
+            )
+        }
+        // Registros
+        if (mostrarDialogoSalirDeInsercion) {
+            DialogoSalirDeInsercionRegistros(
+                onMostrarDialogo = setMostrarDialogoSalirDeInsercion,
+                registrosVM = registrosVM
             )
         }
         NavHost(
