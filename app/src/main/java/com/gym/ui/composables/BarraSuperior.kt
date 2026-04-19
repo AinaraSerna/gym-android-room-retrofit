@@ -101,42 +101,46 @@ fun BarraSuperior(
                         tint = Color.White
                     )
                 }
-                IconButton(
-                    onClick = {
-                        when (iOpcionSeleccionada) {
-                            1 -> {
-                                val codHistorial = historialSeleccionado?.id
-                                val codSesion = historialSeleccionado?.codSesion
-                                if (codHistorial != null && codSesion != null) {
-                                    navController.navigate(
-                                        route = FormRegistrosDeHistorial(
-                                            codHistorial = codHistorial,
-                                            codSesion = codSesion
+                if (iOpcionSeleccionada != 0) {
+                    IconButton(
+                        onClick = {
+                            when (iOpcionSeleccionada) {
+                                1 -> {
+                                    val codHistorial = historialSeleccionado?.id
+                                    val codSesion = historialSeleccionado?.codSesion
+                                    if (codHistorial != null && codSesion != null) {
+                                        navController.navigate(
+                                            route = FormRegistrosDeHistorial(
+                                                codHistorial = codHistorial,
+                                                codSesion = codSesion
+                                            )
                                         )
-                                    )
+                                    }
+                                }
+
+                                2 -> {
+                                    navController.navigate(DetallesEjercicioRoute)
+                                }
+
+                                3 -> {
+                                    navController.navigate(DetallesSesionRoute)
                                 }
                             }
-                            2 -> {
-                                navController.navigate(DetallesEjercicioRoute)
-                            }
-                            3 -> {
-                                navController.navigate(DetallesSesionRoute)
-                            }
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Editar",
+                            tint = Color.White
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Editar",
-                        tint = Color.White
-                    )
-                }
-                IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Eliminar",
-                        tint = Color.White
-                    )
+                    IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Eliminar",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
         },

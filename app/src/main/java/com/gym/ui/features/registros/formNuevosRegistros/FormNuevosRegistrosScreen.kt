@@ -400,7 +400,7 @@ fun FormNuevosRegistrosScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 35.dp),
+                    .padding(top = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Button(

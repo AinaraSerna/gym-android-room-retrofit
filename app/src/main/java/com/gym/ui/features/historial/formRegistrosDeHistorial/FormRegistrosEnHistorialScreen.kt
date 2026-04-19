@@ -42,8 +42,6 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +58,6 @@ import androidx.compose.ui.unit.sp
 import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.historial.HistorialEvent
-import com.gym.ui.features.registros.RegistroUiState
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.CerezaOscuro
@@ -68,7 +65,6 @@ import com.gym.ui.theme.RosaPalo
 import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.text.isNotBlank
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +75,9 @@ fun FormRegistrosDeHistorial(
     listaEjercicios: List<EjercicioUiState>,
     onHistorialEvent: (HistorialEvent) -> Unit,
     onRegistrosEnHistorialEvent: (RegistrosHistorialEvent) -> Unit,
-    registros: List<RegistroUiState>
+    datosPeso: Map<String, String>,
+    datosReps: Map<String, String>,
+    algunCambio: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -91,27 +89,13 @@ fun FormRegistrosDeHistorial(
             initialPage = 0,
             initialPageOffsetFraction = 0f
         )
-        // La clave será "ejercicioId-serieIndex"
-        val inputsPeso = remember { mutableStateMapOf<String, String>() }
-        val inputsReps = remember { mutableStateMapOf<String, String>() }
-
-        // Carga de los datos de los registros en los inputs
-        listaEjercicios.forEach { ejercicio ->
-            for (serie in 1..ejercicio.serie) {
-                val key = "${ejercicio.id}-$serie"
-                val dato =
-                    registros.first { r -> r.codEjercicio == ejercicio.id && r.serie == serie }
-                inputsPeso[key] = dato.peso.toString()
-                inputsReps[key] = dato.repeticiones
-            }
-        }
 
         // Cálculo para habilitar el botón: todos los ejercicios deben tener sus campos rellenos
-        val todosCamposRellenos = listaEjercicios.none { ejercicio ->
-            (0 until ejercicio.serie).all { serieIndex ->
+        val todosCamposRellenos = listaEjercicios.all { ejercicio ->
+            (1..ejercicio.serie).all { serieIndex ->
                 val key = "${ejercicio.id}-$serieIndex"
-                val peso = inputsPeso[key] ?: ""
-                val reps = inputsReps[key] ?: ""
+                val peso = datosPeso[key] ?: ""
+                val reps = datosReps[key] ?: ""
                 peso.isNotBlank() && reps.isNotBlank()
             }
         }
@@ -246,8 +230,8 @@ fun FormRegistrosDeHistorial(
                             ) {
                                 items(count = ejercicio.serie) { serieIndex ->
                                     val key = "${ejercicio.id}-${serieIndex + 1}"
-                                    val pesoValue = inputsPeso[key] ?: ""
-                                    val repsValue = inputsReps[key] ?: ""
+                                    val pesoValue = datosPeso[key] ?: ""
+                                    val repsValue = datosReps[key] ?: ""
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -287,12 +271,14 @@ fun FormRegistrosDeHistorial(
                                                     .width(100.dp)
                                                     .padding(bottom = 5.dp),
                                                 value = pesoValue,
-                                                onValueChange = {
-                                                    inputsPeso[key] =
-                                                        if (it.contains(",")) it.replace(
-                                                            ",",
-                                                            "."
-                                                        ) else it
+                                                onValueChange = { newValue ->
+                                                    onRegistrosEnHistorialEvent(
+                                                        RegistrosHistorialEvent.OnUpdateLocalData(
+                                                            key = key,
+                                                            peso = newValue.replace(",", "."),
+                                                            reps = null
+                                                        )
+                                                    )
                                                 },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
@@ -320,12 +306,14 @@ fun FormRegistrosDeHistorial(
                                                     .width(100.dp)
                                                     .padding(bottom = 5.dp),
                                                 value = repsValue,
-                                                onValueChange = {
-                                                    inputsReps[key] =
-                                                        if (it.contains(".")) it.replace(
-                                                            ".",
-                                                            ":"
-                                                        ) else it
+                                                onValueChange = { newValue ->
+                                                    onRegistrosEnHistorialEvent(
+                                                        RegistrosHistorialEvent.OnUpdateLocalData(
+                                                            key = key,
+                                                            peso = null,
+                                                            reps = newValue.replace(".", ":")
+                                                        )
+                                                    )
                                                 },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
@@ -409,21 +397,23 @@ fun FormRegistrosDeHistorial(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 35.dp),
+                    .padding(top = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
                     modifier = Modifier
                         .size(width = 120.dp, height = 50.dp),
                     onClick = {
-                        scope.launch {
+                        onRegistrosEnHistorialEvent(RegistrosHistorialEvent.OnSaveAll {
                             onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
                             onIrAtras()
-                            snackbarMensaje(
-                                snackbarHostState = snackbarHostState,
-                                mensaje = "Registros modificados correctamente"
-                            )
-                        }
+                            scope.launch {
+                                snackbarMensaje(
+                                    snackbarHostState = snackbarHostState,
+                                    mensaje = "Registros modificados correctamente"
+                                )
+                            }
+                        })
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Cereza,
@@ -431,7 +421,7 @@ fun FormRegistrosDeHistorial(
                         disabledContainerColor = CerezaDeshabilitado,
                         disabledContentColor = Color.White.copy(alpha = 0.6f)
                     ),
-                    enabled = todosCamposRellenos
+                    enabled = todosCamposRellenos && algunCambio
                 ) {
                     Text(
                         text = "Guardar",
@@ -461,51 +451,12 @@ fun FormRegistrosDeHistorialPreview() {
                 codSesion = 1,
                 orden = 1,
                 serie = 3
-            ),
-            EjercicioUiState(
-                id = 2,
-                nombre = "Ejercicio 2",
-                notas = "Descripción del ejercicio 2",
-                codSesion = 1,
-                orden = 2,
-                serie = 3
-            ),
-            EjercicioUiState(
-                id = 3,
-                nombre = "Ejercicio 3",
-                notas = "Descripción del ejercicio 3",
-                codSesion = 1,
-                orden = 3,
-                serie = 1
-            )
-        ),
-        registros = listOf(
-            RegistroUiState(
-                codHistorial = 1,
-                codEjercicio = 1,
-                nombreEjercicio = "Ejercicio 1",
-                serie = 1,
-                peso = 100f,
-                repeticiones = "10"
-            ),
-            RegistroUiState(
-                codHistorial = 1,
-                codEjercicio = 1,
-                nombreEjercicio = "Ejercicio 1",
-                serie = 2,
-                peso = 100f,
-                repeticiones = "11"
-            ),
-            RegistroUiState(
-                codHistorial = 1,
-                codEjercicio = 1,
-                nombreEjercicio = "Ejercicio 1",
-                serie = 3,
-                peso = 100f,
-                repeticiones = "12"
             )
         ),
         onHistorialEvent = {},
         onRegistrosEnHistorialEvent = {},
+        datosPeso = emptyMap(),
+        datosReps = emptyMap(),
+        algunCambio = false
     )
 }

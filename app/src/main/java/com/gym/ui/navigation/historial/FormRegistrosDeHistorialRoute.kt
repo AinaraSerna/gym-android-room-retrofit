@@ -23,13 +23,18 @@ fun NavGraphBuilder.formRegistrosDeHistorialDestination(
     composable<FormRegistrosDeHistorial> {
         val formRegistrosDeHistorialVM = hiltViewModel<FormRegistrosEnHistorialViewModel>()
         val listaEjercicios = formRegistrosDeHistorialVM.listaEjercicios.collectAsState().value
-        val registros = formRegistrosDeHistorialVM.registros.collectAsState().value
+        val datosPeso = formRegistrosDeHistorialVM.datosPeso.collectAsState().value
+        val datosReps = formRegistrosDeHistorialVM.datosReps.collectAsState().value
+        val algunCambio = formRegistrosDeHistorialVM.algunCambio.collectAsState().value
+
         FormRegistrosDeHistorial (
             onIrAtras = onIrAtras,
             scope = scope,
             snackbarHostState = snackbarHostState,
             listaEjercicios = listaEjercicios,
-            registros = registros,
+            datosPeso = datosPeso,
+            datosReps = datosReps,
+            algunCambio = algunCambio,
             onHistorialEvent = historialVM::onHistorialEvent,
             onRegistrosEnHistorialEvent = formRegistrosDeHistorialVM::onRegistrosEnHistorialEvent
         )
