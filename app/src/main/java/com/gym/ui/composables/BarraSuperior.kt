@@ -6,6 +6,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,7 +50,9 @@ fun BarraSuperior(
     onHistorialEvent: (HistorialEvent) -> Unit,
     historialSeleccionado: HistorialConNombreSesionDTO?,
     salirDeForm: Boolean,
-    setMostrarDialogoSalirDeInsercion: (Boolean) -> Unit
+    setMostrarDialogoSalirDeInsercion: (Boolean) -> Unit,
+    setMostrarDialogoFiltrarHistorial: (Boolean) -> Unit,
+    filtrando: Boolean
 ) {
     LaunchedEffect(key1 = salirDeForm) {
         if (salirDeForm && iOpcionSeleccionada == 4) {
@@ -157,6 +161,36 @@ fun BarraSuperior(
                         )
                     }
                 }
+            } else {
+                if (iOpcionSeleccionada == 1) {
+                    if (filtrando) {
+                        IconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = {
+                                onHistorialEvent(HistorialEvent.OnGetHistorial)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.FilterAltOff,
+                                contentDescription = "Filtrar",
+                                tint = Color.White
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = {
+                                setMostrarDialogoFiltrarHistorial(true)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.FilterAlt,
+                                contentDescription = "Filtrar",
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -184,6 +218,8 @@ fun BarraSuperiorPreview() {
         onHistorialEvent = {},
         historialSeleccionado = null,
         salirDeForm = false,
-        setMostrarDialogoSalirDeInsercion = {}
+        setMostrarDialogoSalirDeInsercion = {},
+        setMostrarDialogoFiltrarHistorial = {},
+        filtrando = false
     )
 }

@@ -21,6 +21,9 @@ class HistorialViewModel @Inject constructor(
     private val _historialSeleccionado = MutableStateFlow<HistorialConNombreSesionDTO?>(value = null)
     val historialSeleccionado = _historialSeleccionado.asStateFlow()
 
+    private val _filtrando = MutableStateFlow(value = false)
+    val filtrando = _filtrando.asStateFlow()
+
     init {
         getHistorial()
     }
@@ -34,12 +37,14 @@ class HistorialViewModel @Inject constructor(
                 event.onResult
             )
             is HistorialEvent.OnDeleteRegistros -> deleteHistorial(event.id)
+            is HistorialEvent.OnFiltrarHistorial -> filterHistorial(event.codSesion)
         }
     }
 
     private fun getHistorial() {
         viewModelScope.launch {
             _historial.value = repository.getAllConNombreSesion()
+            _filtrando.value = false
         }
     }
 
@@ -64,6 +69,13 @@ class HistorialViewModel @Inject constructor(
         viewModelScope.launch {
             val historialUiState = repository.getById(id)
             repository.delete(historialUiState.toHistorial())
+        }
+    }
+
+    private fun filterHistorial(codSesion : Int){
+        viewModelScope.launch {
+            _historial.value = repository.getByCodSesion(codSesion)
+            _filtrando.value = true
         }
     }
 }

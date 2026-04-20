@@ -28,6 +28,7 @@ import com.gym.ui.composables.BotonFlotante
 import com.gym.ui.composables.dialogos.DialogoEliminarEjercicio
 import com.gym.ui.composables.dialogos.DialogoEliminarRegistros
 import com.gym.ui.composables.dialogos.DialogoEliminarSesion
+import com.gym.ui.composables.dialogos.DialogoFiltrarHistorial
 import com.gym.ui.composables.dialogos.DialogoSalirDeInsercionRegistros
 import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
@@ -113,6 +114,9 @@ fun NavHostPrincipal(
     val (mostrarDialogoEliminarEjercicio, setMostrarDialogoEliminarEjercicio) = remember {
         mutableStateOf(value = false)
     }
+    val (mostrarDialogoFiltrarHistorial, setMostrarDialogoFiltrarHistorial) = remember {
+        mutableStateOf(value = false)
+    }
     val (mostrarDialogoEliminarRegistros, setMostrarDialogoEliminarRegistros) = remember {
         mutableStateOf(value = false)
     }
@@ -190,7 +194,9 @@ fun NavHostPrincipal(
                 onHistorialEvent = historialVM::onHistorialEvent,
                 historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value,
                 salirDeForm = registrosVM.salirDeForm.collectAsState().value,
-                setMostrarDialogoSalirDeInsercion = setMostrarDialogoSalirDeInsercion
+                setMostrarDialogoSalirDeInsercion = setMostrarDialogoSalirDeInsercion,
+                setMostrarDialogoFiltrarHistorial = setMostrarDialogoFiltrarHistorial,
+                filtrando = historialVM.filtrando.collectAsState().value
             )
         },
         bottomBar = {
@@ -292,6 +298,13 @@ fun NavHostPrincipal(
                 scope = scope,
                 onHistorialEvent = historialVM::onHistorialEvent,
                 historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value!!
+            )
+        }
+        if (mostrarDialogoFiltrarHistorial){
+            DialogoFiltrarHistorial(
+                onMostrarDialogo = setMostrarDialogoFiltrarHistorial,
+                onHistorailEvent = historialVM::onHistorialEvent,
+                sesiones = sesiones
             )
         }
         // Registros

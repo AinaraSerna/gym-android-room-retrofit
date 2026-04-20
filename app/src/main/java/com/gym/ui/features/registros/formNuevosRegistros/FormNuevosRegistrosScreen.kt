@@ -99,7 +99,7 @@ fun FormNuevosRegistrosScreen(
 
         // Cálculo para habilitar el botón: todos los ejercicios deben tener sus campos rellenos
         val todosCamposRellenos = listaEjercicios.all { ejercicio ->
-            (0 until ejercicio.serie).all { serieIndex ->
+            (1..ejercicio.serie).all { serieIndex ->
                 val key = "${ejercicio.id}-$serieIndex"
                 val peso = inputsPeso[key] ?: ""
                 val reps = inputsReps[key] ?: ""
@@ -161,7 +161,7 @@ fun FormNuevosRegistrosScreen(
                             TooltipBox(
                                 modifier = Modifier.weight(0.15f),
                                 positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(
-                                    spacingBetweenTooltipAndAnchor = (-5).dp
+                                    spacingBetweenTooltipAndAnchor = 5.dp
                                 ),
                                 tooltip = {
                                     PlainTooltip { Text(text = ejercicio.notas) }

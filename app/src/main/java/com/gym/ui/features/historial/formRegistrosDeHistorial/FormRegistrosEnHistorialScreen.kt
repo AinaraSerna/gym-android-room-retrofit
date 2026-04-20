@@ -154,7 +154,7 @@ fun FormRegistrosDeHistorial(
                             TooltipBox(
                                 modifier = Modifier.weight(0.15f),
                                 positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(
-                                    spacingBetweenTooltipAndAnchor = (-5).dp
+                                    spacingBetweenTooltipAndAnchor = 5.dp
                                 ),
                                 tooltip = {
                                     PlainTooltip { Text(text = ejercicio.notas) }
