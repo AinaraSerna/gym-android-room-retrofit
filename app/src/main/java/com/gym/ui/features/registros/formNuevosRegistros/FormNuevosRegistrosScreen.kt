@@ -287,7 +287,13 @@ fun FormNuevosRegistrosScreen(
                                                             "."
                                                         ) else it
                                                 },
-                                                placeholder = { Text(text = registroAnterior.first) },
+                                                placeholder = {
+                                                    Text(
+                                                        text = registroAnterior.first
+                                                            .replace(".0", "")
+                                                            .replace(".", ",")
+                                                    )
+                                                },
                                                 keyboardOptions = KeyboardOptions.Default.copy(
                                                     keyboardType = KeyboardType.Number
                                                 ),

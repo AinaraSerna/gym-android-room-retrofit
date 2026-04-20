@@ -46,6 +46,7 @@ import com.gym.ui.features.ejercicios.EjercicioEvent
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
+import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
 import com.gym.ui.theme.RosaPalo
@@ -317,7 +318,9 @@ fun DetallesEjercicioScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                modifier = Modifier.size(width = 120.dp, height = 60.dp),
+                modifier = Modifier
+                    .size(width = 120.dp, height = 60.dp)
+                    .padding(top = 10.dp),
                 onClick = {
                     onEjercicioEvent(
                         EjercicioEvent.OnUpdateEjercicio(
@@ -350,9 +353,12 @@ fun DetallesEjercicioScreen(
                         || (notasTextField != ejercicioSeleccionado.notas)
                         || (codSesionSeleccionado != ejercicioSeleccionado.codSesion),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Cereza
+                    containerColor = Cereza,
+                    contentColor = Color.White,
+                    disabledContainerColor = CerezaDeshabilitado,
+                    disabledContentColor = Color.White.copy(alpha = 0.6f)
                 ),
-                shape = MaterialTheme.shapes.small,
+                shape = MaterialTheme.shapes.medium,
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 8.dp
                 )

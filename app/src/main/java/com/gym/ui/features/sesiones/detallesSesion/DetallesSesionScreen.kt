@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
+import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.RojoClaroError
 import com.gym.ui.theme.RojoError
 import com.gym.ui.theme.RosaPalo
@@ -147,7 +149,9 @@ fun DetallesSesionScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                modifier = Modifier.size(width = 120.dp, height = 60.dp),
+                modifier = Modifier
+                    .size(width = 120.dp, height = 60.dp)
+                    .padding(top = 10.dp),
                 onClick = {
                     onSesionEvent(
                         SesionEvent.OnUpdateSesion(
@@ -173,9 +177,12 @@ fun DetallesSesionScreen(
                         && (nombreTextField != sesionSeleccionada.nombre
                         || descripcionTextField != sesionSeleccionada.descripcion),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Cereza
+                    containerColor = Cereza,
+                    contentColor = Color.White,
+                    disabledContainerColor = CerezaDeshabilitado,
+                    disabledContentColor = Color.White.copy(alpha = 0.6f)
                 ),
-                shape = MaterialTheme.shapes.small,
+                shape = MaterialTheme.shapes.medium,
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 8.dp
                 )

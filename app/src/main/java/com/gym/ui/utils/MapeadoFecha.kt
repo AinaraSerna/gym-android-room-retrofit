@@ -14,9 +14,12 @@ fun fechaLargaFormatoHispano(fecha: LocalDate): String {
             "${traduccionMes(mesIngles = fecha.month.name)} de ${fecha.year}"
 }
 
-fun fechaCortaFormatoHispano(fecha: LocalDate) : String{
-    val salidaMes = if(fecha.monthValue.toString().length == 1) "0${fecha.monthValue}" else "${fecha.monthValue}"
-    return "${fecha.dayOfMonth}/${salidaMes}/${fecha.year}"
+fun fechaCortaFormatoHispano(fecha: LocalDate): String {
+    val salidaDia =
+        if (fecha.dayOfMonth.toString().length == 1) "0${fecha.dayOfMonth}" else "${fecha.dayOfMonth}"
+    val salidaMes =
+        if (fecha.monthValue.toString().length == 1) "0${fecha.monthValue}" else "${fecha.monthValue}"
+    return "${salidaDia}/${salidaMes}/${fecha.year}"
 }
 
 private fun traduccionMes(mesIngles: String): String {
@@ -38,7 +41,7 @@ private fun traduccionMes(mesIngles: String): String {
 }
 
 private fun traduccionDia(diaIngles: String): String {
-    return when(diaIngles.lowercase()){
+    return when (diaIngles.lowercase()) {
         "monday" -> "lunes"
         "tuesday" -> "martes"
         "wednesday" -> "miércoles"

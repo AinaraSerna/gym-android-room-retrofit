@@ -59,6 +59,7 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
+import com.gym.ui.utils.fechaCortaFormatoHispano
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -129,10 +130,40 @@ fun NavHostPrincipal(
                     1 -> "Historial"
                     2 -> "Ejercicios"
                     3 -> "Sesiones"
-                    4 -> "Formulario registros"
-                    5 -> "Formulario historial"
-                    6 -> "Detalles ejercicio"
-                    7 -> "Detalles sesión"
+                    4 -> {
+                        val nombreSesion =
+                            registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.nombre
+                        if (nombreSesion != null) {
+                            "Nueva sesión $nombreSesion"
+                        } else {
+                            "Detalles sesión"
+                        }
+                    }
+
+                    5 -> {
+                        val fechaDeHistorialSeleccionado =
+                            historialVM.historialSeleccionado.collectAsState().value
+
+                        if (fechaDeHistorialSeleccionado != null) {
+                            "Registros de ${fechaCortaFormatoHispano(fechaDeHistorialSeleccionado.fecha)} " +
+                                    "(${fechaDeHistorialSeleccionado.nombreSesion})"
+                        } else {
+                            "Registros de historial"
+                        }
+                    }
+
+                    6 -> {
+                        val nombreEjercicio =
+                            ejerciciosVM.ejercicioSeleccionado.collectAsState().value?.nombre
+                        nombreEjercicio ?: "Detalles ejercicio"
+                    }
+
+                    7 -> {
+                        val nombreSesion =
+                            sesionesVM.sesionSeleccionada.collectAsState().value?.nombre
+                        nombreSesion ?: "Detalles sesión"
+                    }
+
                     8 -> "Sesiones API"
                     9 -> "Ejercicios API"
                     10 -> "Registros API"
@@ -176,7 +207,8 @@ fun NavHostPrincipal(
         floatingActionButton = {
             when (iOpcionNavegacionSeleccionada) {
                 0 -> {
-                    val idSesion = registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
+                    val idSesion =
+                        registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
                     if (idSesion != null) {
                         BotonFlotante(
                             onAccion = {
