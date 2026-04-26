@@ -3,6 +3,7 @@ package com.gym.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.gym.data.retrofit.services.EjerciciosService
+import com.gym.data.retrofit.services.HistoricalService
 import com.gym.data.retrofit.services.RegistrosService
 import com.gym.data.retrofit.services.SesionesService
 import com.gym.data.room.gym.sesiones.SesionDao
@@ -101,7 +102,7 @@ class AppModule {
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl("http://pc-ainara/gym/")
+        .baseUrl("http://192.168.0.101/gym/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -116,6 +117,12 @@ class AppModule {
     fun provideEjerciciosService(
         retrofit: Retrofit
     ) : EjerciciosService = retrofit.create(EjerciciosService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHistorialService(
+        retrofit: Retrofit
+    ) : HistoricalService = retrofit.create(HistoricalService::class.java)
 
     @Provides
     @Singleton

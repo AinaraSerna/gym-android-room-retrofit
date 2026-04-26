@@ -160,6 +160,14 @@ ALTER TABLE `historial`
 ALTER TABLE `registros`
   ADD CONSTRAINT `registros_ibfk_1` FOREIGN KEY (`cod_historial`) REFERENCES `historial` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `registros_ibfk_2` FOREIGN KEY (`cod_ejercicio`) REFERENCES `ejercicios` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION;
+
+--
+-- Auto_increment para tablas volcadas
+--
+ALTER TABLE `sesiones` AUTO_INCREMENT = 0;
+ALTER TABLE `ejercicios` AUTO_INCREMENT = 0;
+ALTER TABLE `historial` AUTO_INCREMENT = 0;
+ALTER TABLE `registros` AUTO_INCREMENT = 0;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

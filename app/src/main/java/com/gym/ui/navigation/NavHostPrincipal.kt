@@ -35,6 +35,7 @@ import com.gym.ui.composables.dialogos.InsertarSesionDialogo
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.ejercicios.EjerciciosViewModel
 import com.gym.ui.features.historial.HistorialViewModel
+import com.gym.ui.features.menulateral.sesiones.SesionesApiViewModel
 import com.gym.ui.features.registros.RegistrosViewModel
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
@@ -98,6 +99,8 @@ fun NavHostPrincipal(
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
     val historialVM = hiltViewModel<HistorialViewModel>()
     val registrosVM = hiltViewModel<RegistrosViewModel>()
+
+    val sesionesApiVM = hiltViewModel<SesionesApiViewModel>()
 
     val sesiones = sesionesVM.sesiones.collectAsState().value
     val sesionRegistrosSeleccionada = registrosVM.sesionRegistrosSeleccionada.collectAsState().value
@@ -362,9 +365,12 @@ fun NavHostPrincipal(
             )
 
             // Opciones menú lateral
+            sesionesApiDestination(
+                sesionesApiVM = sesionesApiVM,
+                sesionesVM = sesionesVM
+            )
             historialApiDestination()
             ejerciciosApiDestination()
-            sesionesApiDestination()
         }
     }
 }

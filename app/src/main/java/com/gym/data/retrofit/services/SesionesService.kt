@@ -1,5 +1,6 @@
 package com.gym.data.retrofit.services
 
+import com.gym.data.retrofit.respuestasapi.RespuestaApi
 import com.gym.data.retrofit.respuestasapi.SesionApi
 import com.gym.data.retrofit.respuestasapi.TotalRegistrosApi
 import retrofit2.Response
@@ -20,13 +21,13 @@ interface SesionesService {
 
     @POST
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun insertarSesionApi(sesionApi: SesionApi)
+    suspend fun insertarSesionApi(sesionApi: SesionApi) : Response<RespuestaApi>
 
     @PUT
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun actualizarSesionApi(sesionApi: SesionApi)
+    suspend fun actualizarSesionApi(sesionApi: SesionApi) : Response<RespuestaApi>
 
     @DELETE
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun borrarSesionApi(sesionApi: SesionApi)
+    suspend fun borrarSesionApi(sesionApi: SesionApi) : Response<RespuestaApi>
 }

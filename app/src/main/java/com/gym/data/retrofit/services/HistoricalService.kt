@@ -9,7 +9,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
-interface HistorialSecrvice {
+interface HistoricalService {
     @GET(value = "historial")
     @Headers("Accept: application/json", "Content-Type: application/json")
     suspend fun historialApi() : Response<List<HistorialApi>>
