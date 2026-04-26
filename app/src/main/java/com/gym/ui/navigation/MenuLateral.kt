@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
-import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.SportsGymnastics
-import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.SportsGymnastics
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -36,7 +36,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
-import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.HistorialApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaOscuro
@@ -55,7 +55,7 @@ fun MenuLateral(navController: NavHostController) {
             when {
                 destino?.hasRoute(SesionesApiRoute::class) == true -> 0
                 destino?.hasRoute(EjerciciosApiRoute::class) == true -> 1
-                destino?.hasRoute(RegistrosApiRoute::class) == true -> 2
+                destino?.hasRoute(HistorialApiRoute::class) == true -> 2
                 else -> -1
             }
         }
@@ -84,9 +84,9 @@ fun MenuLateral(navController: NavHostController) {
             ),
             OpcionMenuLateral(
                 id = 2,
-                titulo = "Registros",
-                iconoPorDefecto = Icons.Outlined.Checklist,
-                iconoSeleccionado = Icons.Filled.Checklist
+                titulo = "Historial",
+                iconoPorDefecto = Icons.Outlined.History,
+                iconoSeleccionado = Icons.Filled.History
             )
         )
     }
@@ -202,9 +202,9 @@ fun MenuLateralPreview() {
             ),
             OpcionMenuLateral(
                 id = 2,
-                titulo = "Registros",
-                iconoPorDefecto = Icons.Outlined.Checklist,
-                iconoSeleccionado = Icons.Filled.Checklist
+                titulo = "Historial",
+                iconoPorDefecto = Icons.Outlined.History,
+                iconoSeleccionado = Icons.Filled.History
             )
         ),
         onOpcionClick = {}

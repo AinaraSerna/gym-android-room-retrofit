@@ -47,10 +47,10 @@ import com.gym.ui.navigation.historial.HistorialRoute
 import com.gym.ui.navigation.historial.formRegistrosDeHistorialDestination
 import com.gym.ui.navigation.historial.historialDestination
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
-import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.HistorialApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.navigation.menulateral.ejerciciosApiDestination
-import com.gym.ui.navigation.menulateral.registrosApiDestination
+import com.gym.ui.navigation.menulateral.historialApiDestination
 import com.gym.ui.navigation.menulateral.sesionesApiDestination
 import com.gym.ui.navigation.registros.FormNuevosRegistrosRoute
 import com.gym.ui.navigation.registros.RegistrosRoute
@@ -89,7 +89,7 @@ fun NavHostPrincipal(
                 destino.hasRoute<DetallesSesionRoute>() -> 7
                 destino.hasRoute<SesionesApiRoute>() -> 8
                 destino.hasRoute<EjerciciosApiRoute>() -> 9
-                destino.hasRoute<RegistrosApiRoute>() -> 10
+                destino.hasRoute<HistorialApiRoute>() -> 10
                 else -> -1
             }
         }
@@ -170,7 +170,7 @@ fun NavHostPrincipal(
 
                     8 -> "Sesiones API"
                     9 -> "Ejercicios API"
-                    10 -> "Registros API"
+                    10 -> "Historial API"
                     else -> "Gym"
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
@@ -218,11 +218,7 @@ fun NavHostPrincipal(
                     if (idSesion != null) {
                         BotonFlotante(
                             onAccion = {
-                                navController.navigate(
-                                    route = FormNuevosRegistrosRoute(
-                                        codSesion = idSesion
-                                    )
-                                )
+                                navController.navigate(route = FormNuevosRegistrosRoute(codSesion = idSesion))
                             }
                         )
                     }
@@ -342,7 +338,8 @@ fun NavHostPrincipal(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onHistorialEvent = historialVM::onHistorialEvent
+                onHistorialEvent = historialVM::onHistorialEvent,
+                onRegistrosEvent = registrosVM::onRegistrosEvent
             )
             formRegistrosDeHistorialDestination(
                 onIrAtras = { navController.popBackStack() },
@@ -365,7 +362,7 @@ fun NavHostPrincipal(
             )
 
             // Opciones menú lateral
-            registrosApiDestination()
+            historialApiDestination()
             ejerciciosApiDestination()
             sesionesApiDestination()
         }

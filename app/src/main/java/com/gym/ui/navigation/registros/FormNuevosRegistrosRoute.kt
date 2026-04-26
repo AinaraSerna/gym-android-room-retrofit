@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.gym.ui.features.historial.HistorialEvent
+import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.registros.formNuevosRegistros.FormNuevosRegistrosScreen
 import com.gym.ui.features.registros.formNuevosRegistros.FormNuevosRegistrosViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,8 @@ fun NavGraphBuilder.formNuevosRegistrosDestination(
     onIrAtras: () -> Unit,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    onHistorialEvent: (HistorialEvent) -> Unit
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    onRegistrosEvent: (RegistrosEvent) -> Unit
 ) {
     composable<FormNuevosRegistrosRoute> {
         val formNuevosRegistrosVM = hiltViewModel<FormNuevosRegistrosViewModel>()
@@ -27,7 +29,10 @@ fun NavGraphBuilder.formNuevosRegistrosDestination(
             listaEjercicios = formNuevosRegistrosVM.listaEjerciciosDeSesion.collectAsState().value,
             scope = scope,
             snackbarHostState = snackbarHostState,
-            onRegistrosEvent = formNuevosRegistrosVM::onRegistrosEvent,
+            onRegistrosEvent = {
+                formNuevosRegistrosVM.onRegistrosEvent(it)
+                onRegistrosEvent(it)
+            },
             onHistorialEvent = onHistorialEvent,
             codSesion = formNuevosRegistrosVM.codSesion,
             ultimosRegistros = formNuevosRegistrosVM.ultimosRegistros.collectAsState().value

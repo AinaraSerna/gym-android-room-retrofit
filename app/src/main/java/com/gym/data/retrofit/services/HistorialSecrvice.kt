@@ -1,6 +1,6 @@
 package com.gym.data.retrofit.services
 
-import com.gym.data.retrofit.respuestasapi.SesionApi
+import com.gym.data.retrofit.respuestasapi.HistorialApi
 import com.gym.data.retrofit.respuestasapi.TotalRegistrosApi
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -9,24 +9,24 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
-interface SesionesService {
-    @GET(value = "sesiones")
+interface HistorialSecrvice {
+    @GET(value = "historial")
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun sesionesApi(): Response<List<SesionApi>>
+    suspend fun historialApi() : Response<List<HistorialApi>>
 
-    @GET(value = "sesiones/count")
+    @GET(value = "historial/count")
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun totalSesionesApi(): Response<TotalRegistrosApi>
+    suspend fun totalHistorialApi() : Response<TotalRegistrosApi>
 
     @POST
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun insertarSesionApi(sesionApi: SesionApi)
+    suspend fun insertarHistorialApi(historialApi: HistorialApi)
 
     @PUT
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun actualizarSesionApi(sesionApi: SesionApi)
+    suspend fun actualizarHistorialApi(historialApi: HistorialApi)
 
     @DELETE
     @Headers("Accept: application/json", "Content-Type: application/json")
-    suspend fun borrarSesionApi(sesionApi: SesionApi)
+    suspend fun borrarHistorialApi(historialApi: HistorialApi)
 }

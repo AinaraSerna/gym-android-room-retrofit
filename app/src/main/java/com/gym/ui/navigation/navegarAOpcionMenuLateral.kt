@@ -2,14 +2,14 @@ package com.gym.ui.navigation
 
 import androidx.navigation.NavController
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
-import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.HistorialApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 
 fun navegarAOpcionMenuLateral(navController: NavController, indice: Int) {
     val ruta = when (indice) {
         0 -> SesionesApiRoute
         1 -> EjerciciosApiRoute
-        2 -> RegistrosApiRoute
+        2 -> HistorialApiRoute
         else -> return
     }
     

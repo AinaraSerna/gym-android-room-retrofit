@@ -19,10 +19,10 @@ class RegistrosViewModel @Inject constructor(
 
     private val _sesiones = MutableStateFlow<List<SesionUiState>>(value = emptyList())
     val sesiones = _sesiones.asStateFlow()
-    private var _sesionRegistrosSeleccionda = MutableStateFlow<SesionUiState?>(value = null)
-    val sesionRegistrosSeleccionada = _sesionRegistrosSeleccionda.asStateFlow()
+    private var _sesionRegistrosSeleccionada = MutableStateFlow<SesionUiState?>(value = null)
+    val sesionRegistrosSeleccionada = _sesionRegistrosSeleccionada.asStateFlow()
 
-    private val _salirDeForm = MutableStateFlow<Boolean>(value = false)
+    private val _salirDeForm = MutableStateFlow(value = false)
     val salirDeForm = _salirDeForm.asStateFlow()
 
     init {
@@ -44,12 +44,13 @@ class RegistrosViewModel @Inject constructor(
         }
     }
     private fun getSesionById(id: Int?) {
-        viewModelScope.launch {
-            if (id != null) {
-                _sesionRegistrosSeleccionda.value = repository.getById(id).toSesion().toSesionUiState()
-            } else {
-                _sesionRegistrosSeleccionda.value = null
+        if (id != null) {
+            viewModelScope.launch {
+                _sesionRegistrosSeleccionada.value =
+                    repository.getById(id).toSesion().toSesionUiState()
             }
+        } else {
+            _sesionRegistrosSeleccionada.value = null
         }
     }
 }
