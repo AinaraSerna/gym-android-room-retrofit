@@ -50,7 +50,7 @@ fun EjerciciosScreen(
             .fillMaxSize(),
         state = lazyState,
         contentPadding = PaddingValues(all = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(25.dp),
+        verticalArrangement = Arrangement.spacedBy(50.dp),
     ) {
         items(sesiones) { sesion ->
             ElevatedCard(

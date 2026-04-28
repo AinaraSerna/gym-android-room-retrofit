@@ -26,11 +26,16 @@ import com.gym.ui.composables.BarraInferior
 import com.gym.ui.composables.BarraSuperior
 import com.gym.ui.composables.BotonFlotante
 import com.gym.ui.composables.dialogos.DialogoEliminarEjercicio
+import com.gym.ui.composables.dialogos.DialogoEliminarRegistros
 import com.gym.ui.composables.dialogos.DialogoEliminarSesion
+import com.gym.ui.composables.dialogos.DialogoFiltrarHistorial
+import com.gym.ui.composables.dialogos.DialogoSalirDeInsercionRegistros
 import com.gym.ui.composables.dialogos.InsertarEjercicioDialogo
 import com.gym.ui.composables.dialogos.InsertarSesionDialogo
 import com.gym.ui.features.ejercicios.EjercicioUiState
 import com.gym.ui.features.ejercicios.EjerciciosViewModel
+import com.gym.ui.features.historial.HistorialViewModel
+import com.gym.ui.features.menulateral.sesiones.SesionesApiViewModel
 import com.gym.ui.features.registros.RegistrosViewModel
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.features.sesiones.SesionesViewModel
@@ -38,15 +43,15 @@ import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
 import com.gym.ui.navigation.ejercicios.EjerciciosRoute
 import com.gym.ui.navigation.ejercicios.detallesEjercicioDestination
 import com.gym.ui.navigation.ejercicios.ejerciciosDestination
-import com.gym.ui.navigation.historial.FormRegistrosPorFechaRoute
+import com.gym.ui.navigation.historial.FormRegistrosDeHistorial
 import com.gym.ui.navigation.historial.HistorialRoute
-import com.gym.ui.navigation.historial.formRegistrosPorFechaDestination
+import com.gym.ui.navigation.historial.formRegistrosDeHistorialDestination
 import com.gym.ui.navigation.historial.historialDestination
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
-import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.HistorialApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.navigation.menulateral.ejerciciosApiDestination
-import com.gym.ui.navigation.menulateral.registrosApiDestination
+import com.gym.ui.navigation.menulateral.historialApiDestination
 import com.gym.ui.navigation.menulateral.sesionesApiDestination
 import com.gym.ui.navigation.registros.FormNuevosRegistrosRoute
 import com.gym.ui.navigation.registros.RegistrosRoute
@@ -56,6 +61,7 @@ import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.navigation.sesiones.SesionesRoute
 import com.gym.ui.navigation.sesiones.detallesSesionDestination
 import com.gym.ui.navigation.sesiones.sesionesDestination
+import com.gym.ui.utils.fechaCortaFormatoHispano
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,19 +85,22 @@ fun NavHostPrincipal(
                 destino.hasRoute<EjerciciosRoute>() -> 2
                 destino.hasRoute<SesionesRoute>() -> 3
                 destino.hasRoute<FormNuevosRegistrosRoute>() -> 4
-                destino.hasRoute<FormRegistrosPorFechaRoute>() -> 5
+                destino.hasRoute<FormRegistrosDeHistorial>() -> 5
                 destino.hasRoute<DetallesEjercicioRoute>() -> 6
                 destino.hasRoute<DetallesSesionRoute>() -> 7
                 destino.hasRoute<SesionesApiRoute>() -> 8
                 destino.hasRoute<EjerciciosApiRoute>() -> 9
-                destino.hasRoute<RegistrosApiRoute>() -> 10
+                destino.hasRoute<HistorialApiRoute>() -> 10
                 else -> -1
             }
         }
     }
     val sesionesVM = hiltViewModel<SesionesViewModel>()
     val ejerciciosVM = hiltViewModel<EjerciciosViewModel>()
+    val historialVM = hiltViewModel<HistorialViewModel>()
     val registrosVM = hiltViewModel<RegistrosViewModel>()
+
+    val sesionesApiVM = hiltViewModel<SesionesApiViewModel>()
 
     val sesiones = sesionesVM.sesiones.collectAsState().value
     val sesionRegistrosSeleccionada = registrosVM.sesionRegistrosSeleccionada.collectAsState().value
@@ -108,6 +117,15 @@ fun NavHostPrincipal(
     val (mostrarDialogoEliminarEjercicio, setMostrarDialogoEliminarEjercicio) = remember {
         mutableStateOf(value = false)
     }
+    val (mostrarDialogoFiltrarHistorial, setMostrarDialogoFiltrarHistorial) = remember {
+        mutableStateOf(value = false)
+    }
+    val (mostrarDialogoEliminarRegistros, setMostrarDialogoEliminarRegistros) = remember {
+        mutableStateOf(value = false)
+    }
+    val (mostrarDialogoSalirDeInsercion, setMostrarDialogoSalirDeInsercion) = remember {
+        mutableStateOf(value = false)
+    }
 
     Scaffold(
         topBar = {
@@ -119,22 +137,54 @@ fun NavHostPrincipal(
                     1 -> "Historial"
                     2 -> "Ejercicios"
                     3 -> "Sesiones"
-                    4 -> "Formulario registros"
-                    5 -> "Formulario historial"
-                    6 -> "Detalles ejercicio"
-                    7 -> "Detalles sesión"
+                    4 -> {
+                        val nombreSesion =
+                            registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.nombre
+                        if (nombreSesion != null) {
+                            "Nueva sesión $nombreSesion"
+                        } else {
+                            "Detalles sesión"
+                        }
+                    }
+
+                    5 -> {
+                        val fechaDeHistorialSeleccionado =
+                            historialVM.historialSeleccionado.collectAsState().value
+
+                        if (fechaDeHistorialSeleccionado != null) {
+                            "Registros de ${fechaCortaFormatoHispano(fechaDeHistorialSeleccionado.fecha)} " +
+                                    "(${fechaDeHistorialSeleccionado.nombreSesion})"
+                        } else {
+                            "Registros de historial"
+                        }
+                    }
+
+                    6 -> {
+                        val nombreEjercicio =
+                            ejerciciosVM.ejercicioSeleccionado.collectAsState().value?.nombre
+                        nombreEjercicio ?: "Detalles ejercicio"
+                    }
+
+                    7 -> {
+                        val nombreSesion =
+                            sesionesVM.sesionSeleccionada.collectAsState().value?.nombre
+                        nombreSesion ?: "Detalles sesión"
+                    }
+
                     8 -> "Sesiones API"
                     9 -> "Ejercicios API"
-                    10 -> "Registros API"
+                    10 -> "Historial API"
                     else -> "Gym"
                 },
                 opcionSeleccionada = when (iOpcionNavegacionSeleccionada) {
                     0 -> sesionRegistrosSeleccionada != null
+                    1 -> historialVM.historialSeleccionado.collectAsState().value != null
                     2 -> ejerciciosVM.ejercicioSeleccionado.collectAsState().value != null
                     3 -> sesionesVM.sesionSeleccionada.collectAsState().value != null
                     else -> false
                 },
                 setMostrarDialogoEliminacion = when (iOpcionNavegacionSeleccionada) {
+                    1 -> setMostrarDialogoEliminarRegistros
                     2 -> setMostrarDialogoEliminarEjercicio
                     3 -> setMostrarDialogoEliminarSesion
                     else -> { _ -> }
@@ -143,7 +193,13 @@ fun NavHostPrincipal(
                 navController = navController,
                 onSesionEvent = sesionesVM::onSesionEvent,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
-                onRegistroEvent = registrosVM::onRegistrosEvent
+                onRegistroEvent = registrosVM::onRegistrosEvent,
+                onHistorialEvent = historialVM::onHistorialEvent,
+                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value,
+                salirDeForm = registrosVM.salirDeForm.collectAsState().value,
+                setMostrarDialogoSalirDeInsercion = setMostrarDialogoSalirDeInsercion,
+                setMostrarDialogoFiltrarHistorial = setMostrarDialogoFiltrarHistorial,
+                filtrando = historialVM.filtrando.collectAsState().value
             )
         },
         bottomBar = {
@@ -160,13 +216,17 @@ fun NavHostPrincipal(
         floatingActionButton = {
             when (iOpcionNavegacionSeleccionada) {
                 0 -> {
-                    val idSesion = registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
+                    val idSesion =
+                        registrosVM.sesionRegistrosSeleccionada.collectAsState().value?.id
                     if (idSesion != null) {
                         BotonFlotante(
-                            onAccion = { navController.navigate(route = FormNuevosRegistrosRoute(codSesion = idSesion)) }
+                            onAccion = {
+                                navController.navigate(route = FormNuevosRegistrosRoute(codSesion = idSesion))
+                            }
                         )
                     }
                 }
+
                 in 2..3 -> {
                     BotonFlotante(
                         onAccion = {
@@ -211,10 +271,7 @@ fun NavHostPrincipal(
             InsertarEjercicioDialogo(
                 setMostrarDialogoInsertarEjercicio = setMostrarDialogoInsertarEjercicio,
                 ejercicios = ejerciciosVM.ejercicios.collectAsState().value.map {
-                    Pair(
-                        it.nombre,
-                        it.codSesion
-                    )
+                    Pair(it.nombre, it.codSesion)
                 },
                 sesiones = sesionesDesplegable,
                 onEjercicioEvent = ejerciciosVM::onEjercicioEvent,
@@ -232,6 +289,30 @@ fun NavHostPrincipal(
                     ?: EjercicioUiState()
             )
         }
+        // Historial
+        if (mostrarDialogoEliminarRegistros) {
+            DialogoEliminarRegistros(
+                setMostrarDialogo = setMostrarDialogoEliminarRegistros,
+                snackbarHostState = snackbarHostState,
+                scope = scope,
+                onHistorialEvent = historialVM::onHistorialEvent,
+                historialSeleccionado = historialVM.historialSeleccionado.collectAsState().value!!
+            )
+        }
+        if (mostrarDialogoFiltrarHistorial){
+            DialogoFiltrarHistorial(
+                onMostrarDialogo = setMostrarDialogoFiltrarHistorial,
+                onHistorailEvent = historialVM::onHistorialEvent,
+                sesiones = sesiones
+            )
+        }
+        // Registros
+        if (mostrarDialogoSalirDeInsercion) {
+            DialogoSalirDeInsercionRegistros(
+                onMostrarDialogo = setMostrarDialogoSalirDeInsercion,
+                registrosVM = registrosVM
+            )
+        }
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
@@ -245,7 +326,7 @@ fun NavHostPrincipal(
                 registrosVM = registrosVM
             )
             historialDestination(
-                onIrAFormRegistrosPorFecha = { navController.navigate(FormRegistrosPorFechaRoute) }
+                historialVM = historialVM
             )
             ejerciciosDestination(
                 ejerciciosVM = ejerciciosVM,
@@ -259,12 +340,15 @@ fun NavHostPrincipal(
             formNuevosRegistrosDestination(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                onHistorialEvent = historialVM::onHistorialEvent,
+                onRegistrosEvent = registrosVM::onRegistrosEvent
             )
-            formRegistrosPorFechaDestination(
+            formRegistrosDeHistorialDestination(
                 onIrAtras = { navController.popBackStack() },
                 scope = scope,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                historialVM = historialVM
             )
             detallesEjercicioDestination(
                 ejerciciosVM = ejerciciosVM,
@@ -281,9 +365,12 @@ fun NavHostPrincipal(
             )
 
             // Opciones menú lateral
-            registrosApiDestination()
+            sesionesApiDestination(
+                sesionesApiVM = sesionesApiVM,
+                sesionesVM = sesionesVM
+            )
+            historialApiDestination()
             ejerciciosApiDestination()
-            sesionesApiDestination()
         }
     }
 }

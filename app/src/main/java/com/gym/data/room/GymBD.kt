@@ -7,13 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.gym.data.room.gym.ejercicios.EjercicioDao
 import com.gym.data.room.gym.ejercicios.EjercicioEntity
+import com.gym.data.room.gym.historial.HistorialDao
+import com.gym.data.room.gym.historial.HistorialEntity
 import com.gym.data.room.gym.registros.RegistroDao
 import com.gym.data.room.gym.registros.RegistroEntity
 import com.gym.data.room.gym.sesiones.SesionDao
 import com.gym.data.room.gym.sesiones.SesionEntity
 
 @Database(
-    entities = [SesionEntity::class, EjercicioEntity::class, RegistroEntity::class],
+    entities = [SesionEntity::class, EjercicioEntity::class, HistorialEntity::class, RegistroEntity::class],
     version = 1,
     exportSchema = true
 )
@@ -21,6 +23,7 @@ import com.gym.data.room.gym.sesiones.SesionEntity
 abstract class GymBD : RoomDatabase() {
     abstract fun sesionDao(): SesionDao
     abstract fun ejercicioDao(): EjercicioDao
+    abstract fun historialDao(): HistorialDao
     abstract fun registroDao() : RegistroDao
 
     companion object {

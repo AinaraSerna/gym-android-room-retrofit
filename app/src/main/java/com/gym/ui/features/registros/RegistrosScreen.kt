@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.RosaPalo

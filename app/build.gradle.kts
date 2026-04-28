@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.gym.app"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.gym.app"

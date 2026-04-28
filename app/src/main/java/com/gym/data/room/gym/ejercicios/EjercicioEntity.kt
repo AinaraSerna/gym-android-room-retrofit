@@ -16,7 +16,8 @@ import com.gym.data.room.gym.sesiones.SesionEntity
             childColumns = ["cod_sesion"],
             onDelete = ForeignKey.SET_NULL
         )
-    ]
+    ],
+    indices = [Index("cod_sesion")]
 )
 data class EjercicioEntity(
     @PrimaryKey(autoGenerate = true)

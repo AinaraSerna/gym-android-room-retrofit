@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.gym.ui.composables.SnackbarMensaje
+import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.features.sesiones.SesionUiState
 import com.gym.ui.theme.Cereza
@@ -62,7 +62,7 @@ fun DialogoEliminarSesion(
                     onSesionEvent(SesionEvent.OnDeleteSesion(sesionUiState = sesionSeleccionada))
                     setMostrarDialogo(false)
                     scope.launch {
-                        SnackbarMensaje(
+                        snackbarMensaje(
                             mensaje = "Sesión borrada correctamente",
                             snackbarHostState = snackbarHostState
                         )
@@ -75,6 +75,7 @@ fun DialogoEliminarSesion(
         dismissButton = {
             TextButton(
                 onClick = {
+                    onSesionEvent(SesionEvent.OnGetSesionById(null))
                     setMostrarDialogo(false)
                 }
             ) {

@@ -14,8 +14,8 @@ interface RegistroDao {
     suspend fun getAll(): List<RegistroEntity>
     @Query(value = "SELECT * FROM registros WHERE id = :id")
     suspend fun getById(id: Int): RegistroEntity
-    @Query(value = "SELECT * FROM registros WHERE fecha = :fecha")
-    suspend fun getByFecha(fecha: LocalDate): List<RegistroEntity>
+    @Query(value = "SELECT * FROM registros WHERE cod_historial = :codHistorial")
+    suspend fun getByCodHistorial(codHistorial: Int): List<RegistroEntity>
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(registroEntity: RegistroEntity)
     @Update(onConflict = OnConflictStrategy.ABORT)

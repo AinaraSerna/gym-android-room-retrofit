@@ -1,12 +1,13 @@
 package com.gym.ui.navigation
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
-import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.SportsGymnastics
-import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.SportsGymnastics
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -23,20 +24,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gym.ui.navigation.menulateral.EjerciciosApiRoute
-import com.gym.ui.navigation.menulateral.RegistrosApiRoute
+import com.gym.ui.navigation.menulateral.HistorialApiRoute
 import com.gym.ui.navigation.menulateral.SesionesApiRoute
 import com.gym.ui.theme.Cereza
+import com.gym.ui.theme.CerezaOscuro
 import com.gym.ui.theme.RosaPalo
 import kotlinx.coroutines.launch
-import kotlin.reflect.KClass
 
 @Composable
 fun MenuLateral(navController: NavHostController) {
@@ -50,7 +55,7 @@ fun MenuLateral(navController: NavHostController) {
             when {
                 destino?.hasRoute(SesionesApiRoute::class) == true -> 0
                 destino?.hasRoute(EjerciciosApiRoute::class) == true -> 1
-                destino?.hasRoute(RegistrosApiRoute::class) == true -> 2
+                destino?.hasRoute(HistorialApiRoute::class) == true -> 2
                 else -> -1
             }
         }
@@ -79,9 +84,9 @@ fun MenuLateral(navController: NavHostController) {
             ),
             OpcionMenuLateral(
                 id = 2,
-                titulo = "Registros",
-                iconoPorDefecto = Icons.Outlined.Checklist,
-                iconoSeleccionado = Icons.Filled.Checklist
+                titulo = "Historial",
+                iconoPorDefecto = Icons.Outlined.History,
+                iconoSeleccionado = Icons.Filled.History
             )
         )
     }
@@ -89,48 +94,83 @@ fun MenuLateral(navController: NavHostController) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet(
-                drawerContainerColor = RosaPalo,
-                drawerContentColor = Cereza
-            ) {
-                Text(
-                    text = "Respaldo API Rest",
-                    fontWeight = FontWeight.ExtraBold,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(all = 16.dp)
-                )
-                opcionesMenuLateral.forEachIndexed { index, opcion ->
-                    val isSelected = iOpcionLateralSeleccionada == index
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
-                                text = opcion.titulo,
-                                color = Cereza,
-                                fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Normal
-                            )
-                        },
-                        selected = isSelected,
-                        onClick = {
-                            navegarAOpcionMenuLateral(navController = navController, indice = opcion.id)
-                            scope.launch { drawerState.close() }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (isSelected) opcion.iconoSeleccionado else opcion.iconoPorDefecto,
-                                contentDescription = opcion.titulo,
-                                tint = Cereza
-                            )
-                        },
-                        colors = NavigationDrawerItemDefaults.colors(
-                            selectedContainerColor = Color(0xFFF5F5F5),
-                            unselectedContainerColor = Color.White
-                        )
-                    )
+            MenuLateralContent(
+                iOpcionLateralSeleccionada = iOpcionLateralSeleccionada,
+                opcionesMenuLateral = opcionesMenuLateral,
+                onOpcionClick = { opcionId ->
+                    navegarAOpcionMenuLateral(navController = navController, indice = opcionId)
+                    scope.launch { drawerState.close() }
                 }
-            }
+            )
         }
     ) {
         NavHostPrincipal(navController, onAbrirMenuLateral, scope)
+    }
+}
+
+@Composable
+fun MenuLateralContent(
+    iOpcionLateralSeleccionada: Int,
+    opcionesMenuLateral: List<OpcionMenuLateral>,
+    onOpcionClick: (Int) -> Unit
+) {
+    ModalDrawerSheet(
+        drawerContainerColor = RosaPalo.copy(alpha = 0.95f),
+        drawerContentColor = Cereza
+    ) {
+        Text(
+            text = "Respaldo API Rest",
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.ExtraBold,
+                shadow = Shadow(
+                    color = CerezaOscuro,
+                    blurRadius = 2f
+                )
+            ),
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
+            color = CerezaOscuro,
+            letterSpacing = 1.sp
+        )
+        opcionesMenuLateral.forEachIndexed { index, opcion ->
+            val isSelected = iOpcionLateralSeleccionada == index
+            NavigationDrawerItem(
+                modifier = Modifier
+                    .padding(vertical = 4.dp, horizontal = 2.dp)
+                    .border(
+                        width = 1.dp,
+                        color = if (isSelected) Color.White else Cereza.copy(alpha = 0.3f),
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .shadow(
+                        elevation = if (isSelected) 4.dp else 2.dp,
+                        shape = MaterialTheme.shapes.medium,
+                        clip = true
+                    ),
+                label = {
+                    Text(
+                        text = opcion.titulo,
+                        color = if (isSelected) Color.White else Cereza,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Medium
+                        )
+                    )
+                },
+                shape = MaterialTheme.shapes.medium,
+                selected = isSelected,
+                onClick = { onOpcionClick(opcion.id) },
+                icon = {
+                    Icon(
+                        imageVector = if (isSelected) opcion.iconoSeleccionado else opcion.iconoPorDefecto,
+                        contentDescription = opcion.titulo,
+                        tint = if (isSelected) Color.White else Cereza
+                    )
+                },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = Cereza.copy(alpha = 0.9f),
+                    unselectedContainerColor = Color.White
+                )
+            )
+        }
     }
 }
 
@@ -141,3 +181,32 @@ data class OpcionMenuLateral(
     val iconoPorDefecto: ImageVector,
     val iconoSeleccionado: ImageVector
 )
+
+@Preview(showBackground = true)
+@Composable
+fun MenuLateralPreview() {
+    MenuLateralContent(
+        iOpcionLateralSeleccionada = 0,
+        opcionesMenuLateral = listOf(
+            OpcionMenuLateral(
+                id = 0,
+                titulo = "Sesiones",
+                iconoPorDefecto = Icons.AutoMirrored.Outlined.ListAlt,
+                iconoSeleccionado = Icons.AutoMirrored.Filled.ListAlt
+            ),
+            OpcionMenuLateral(
+                id = 1,
+                titulo = "Ejercicios",
+                iconoPorDefecto = Icons.Outlined.SportsGymnastics,
+                iconoSeleccionado = Icons.Filled.SportsGymnastics
+            ),
+            OpcionMenuLateral(
+                id = 2,
+                titulo = "Historial",
+                iconoPorDefecto = Icons.Outlined.History,
+                iconoSeleccionado = Icons.Filled.History
+            )
+        ),
+        onOpcionClick = {}
+    )
+}

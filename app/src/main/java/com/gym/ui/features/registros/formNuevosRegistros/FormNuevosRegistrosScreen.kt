@@ -18,13 +18,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,9 +35,15 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,11 +52,17 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gym.ui.composables.snackbarMensaje
 import com.gym.ui.features.ejercicios.EjercicioUiState
+import com.gym.ui.features.historial.HistorialEvent
+import com.gym.ui.features.historial.HistorialUiState
+import com.gym.ui.features.registros.RegistroUiState
+import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.theme.Cereza
 import com.gym.ui.theme.CerezaDeshabilitado
 import com.gym.ui.theme.CerezaOscuro
@@ -56,22 +71,42 @@ import com.gym.ui.theme.RosaRojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormNuevosRegistrosScreen(
     onIrAtras: () -> Unit,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    listaEjercicios: List<EjercicioUiState>
+    listaEjercicios: List<EjercicioUiState>,
+    onRegistrosEvent: (RegistrosEvent) -> Unit,
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    codSesion: Int?,
+    ultimosRegistros: Map<String, Pair<String, String>>
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        val tooltipState = rememberTooltipState()
         val pager = rememberPagerState(
             pageCount = { listaEjercicios.size },
             initialPage = 0,
             initialPageOffsetFraction = 0f
         )
+        // La clave será "ejercicioId-serieIndex"
+        val inputsPeso = remember { mutableStateMapOf<String, String>() }
+        val inputsReps = remember { mutableStateMapOf<String, String>() }
+
+        // Cálculo para habilitar el botón: todos los ejercicios deben tener sus campos rellenos
+        val todosCamposRellenos = listaEjercicios.all { ejercicio ->
+            (1..ejercicio.serie).all { serieIndex ->
+                val key = "${ejercicio.id}-$serieIndex"
+                val peso = inputsPeso[key] ?: ""
+                val reps = inputsReps[key] ?: ""
+                peso.isNotBlank() && reps.isNotBlank()
+            }
+        }
+
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -79,7 +114,7 @@ fun FormNuevosRegistrosScreen(
                 val ejercicio = listaEjercicios[indice]
                 ElevatedCard(
                     modifier = Modifier
-                        .aspectRatio(0.85f)
+                        .aspectRatio(0.8f)
                         .padding(all = 16.dp),
                     colors = CardDefaults.elevatedCardColors(
                         containerColor = RosaPalo
@@ -94,19 +129,24 @@ fun FormNuevosRegistrosScreen(
                             .padding(all = 20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Box(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.15f),
-                            contentAlignment = Alignment.TopCenter
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start
+                            IconButton(modifier = Modifier.weight(0.15f), onClick = {}) { }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .weight(0.7f),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = ejercicio.nombre.uppercase(),
                                     fontWeight = FontWeight.Black,
-                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                    style = MaterialTheme.typography.titleLarge.copy(
                                         shadow = Shadow(
                                             color = Color.White.copy(alpha = 0.15f),
                                             offset = Offset(x = 4f, y = 4f),
@@ -114,14 +154,33 @@ fun FormNuevosRegistrosScreen(
                                         )
                                     ),
                                     color = CerezaOscuro,
+                                    textAlign = TextAlign.Center,
                                     letterSpacing = 1.sp
                                 )
+                            }
+                            TooltipBox(
+                                modifier = Modifier.weight(0.15f),
+                                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(
+                                    spacingBetweenTooltipAndAnchor = 5.dp
+                                ),
+                                tooltip = {
+                                    PlainTooltip { Text(text = ejercicio.notas) }
+                                },
+                                state = tooltipState
+                            ) {
+                                IconButton(onClick = { scope.launch { tooltipState.show() } }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Info,
+                                        contentDescription = "Información del ejercicio",
+                                        tint = CerezaOscuro
+                                    )
+                                }
                             }
                         }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(0.85f)
+                                .weight(0.67f)
                                 .clip(shape = MaterialTheme.shapes.large)
                                 .border(
                                     width = 1.dp,
@@ -139,9 +198,9 @@ fun FormNuevosRegistrosScreen(
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Box(modifier = Modifier.weight(0.15f))
+                                Box(modifier = Modifier.weight(0.1f))
                                 Text(
-                                    modifier = Modifier.weight(0.425f),
+                                    modifier = Modifier.weight(0.45f),
                                     text = if (ejercicio.serie == 3) "PESO" else "NIVEL",
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.labelLarge.copy(
@@ -151,7 +210,7 @@ fun FormNuevosRegistrosScreen(
                                     )
                                 )
                                 Text(
-                                    modifier = Modifier.weight(0.425f),
+                                    modifier = Modifier.weight(0.45f),
                                     text = if (ejercicio.serie == 3) "REPS." else "TIEMPO",
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.labelLarge.copy(
@@ -162,7 +221,11 @@ fun FormNuevosRegistrosScreen(
                                 )
                             }
                             HorizontalDivider(
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                    bottom = 8.dp
+                                ),
                                 thickness = 0.5.dp,
                                 color = RosaRojo.copy(alpha = 0.2f)
                             )
@@ -172,23 +235,21 @@ fun FormNuevosRegistrosScreen(
                                     .padding(horizontal = 12.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                items(count = ejercicio.serie) {
+                                items(count = ejercicio.serie) { serieIndex ->
+                                    val key = "${ejercicio.id}-${serieIndex + 1}"
+                                    val pesoValue = inputsPeso[key] ?: ""
+                                    val repsValue = inputsReps[key] ?: ""
+                                    val registroAnterior = ultimosRegistros[key] ?: Pair("", "")
+
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-//                                            .border(
-//                                                width = 1.dp,
-//                                                color = Cereza.copy(alpha = 0.6f),
-//                                                shape = MaterialTheme.shapes.large
-//                                            )
-//                                            .background(color = RosaPalo.copy(alpha = 0.1f))
-                                            .padding(vertical = 5.dp, horizontal = 5.dp),
+                                            .padding(all = 5.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.SpaceAround
                                     ) {
                                         Box(
-                                            modifier = Modifier
-                                                .weight(0.1f),
+                                            modifier = Modifier.weight(0.1f),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Box(
@@ -204,7 +265,7 @@ fun FormNuevosRegistrosScreen(
                                                 contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
-                                                    text = "${it + 1}", color = Color.White,
+                                                    text = "${serieIndex + 1}", color = Color.White,
                                                     style = MaterialTheme.typography.titleMedium
                                                 )
                                             }
@@ -218,15 +279,34 @@ fun FormNuevosRegistrosScreen(
                                                     .fillMaxHeight()
                                                     .width(100.dp)
                                                     .padding(bottom = 5.dp),
-                                                value = "",
-                                                onValueChange = {},
+                                                value = pesoValue,
+                                                onValueChange = {
+                                                    inputsPeso[key] =
+                                                        if (it.contains(",")) it.replace(
+                                                            ",",
+                                                            "."
+                                                        ) else it
+                                                },
+                                                placeholder = {
+                                                    Text(
+                                                        text = registroAnterior.first
+                                                            .replace(".0", "")
+                                                            .replace(".", ",")
+                                                    )
+                                                },
+                                                keyboardOptions = KeyboardOptions.Default.copy(
+                                                    keyboardType = KeyboardType.Number
+                                                ),
                                                 maxLines = 1,
                                                 label = { Text(text = if (ejercicio.serie == 3) "Peso" else "Nivel") },
                                                 colors = OutlinedTextFieldDefaults.colors(
                                                     focusedBorderColor = Cereza,
                                                     unfocusedBorderColor = CerezaDeshabilitado,
                                                     unfocusedContainerColor = Color.White,
-                                                    focusedContainerColor = Color.White
+                                                    focusedContainerColor = Color.White,
+                                                    cursorColor = Cereza,
+                                                    focusedLabelColor = Cereza,
+                                                    unfocusedLabelColor = Cereza
                                                 )
                                             )
                                         }
@@ -239,15 +319,28 @@ fun FormNuevosRegistrosScreen(
                                                     .fillMaxHeight()
                                                     .width(100.dp)
                                                     .padding(bottom = 5.dp),
-                                                value = "",
-                                                onValueChange = {},
+                                                value = repsValue,
+                                                onValueChange = {
+                                                    inputsReps[key] =
+                                                        if (it.contains(".")) it.replace(
+                                                            ".",
+                                                            ":"
+                                                        ) else it
+                                                },
+                                                placeholder = { Text(text = registroAnterior.second) },
+                                                keyboardOptions = KeyboardOptions.Default.copy(
+                                                    keyboardType = KeyboardType.Number
+                                                ),
                                                 maxLines = 1,
                                                 label = { Text(text = if (ejercicio.serie == 3) "Reps." else "Tiempo") },
                                                 colors = OutlinedTextFieldDefaults.colors(
                                                     focusedBorderColor = Cereza,
                                                     unfocusedBorderColor = CerezaDeshabilitado,
                                                     unfocusedContainerColor = Color.White,
-                                                    focusedContainerColor = Color.White
+                                                    focusedContainerColor = Color.White,
+                                                    cursorColor = Cereza,
+                                                    focusedLabelColor = Cereza,
+                                                    unfocusedLabelColor = Cereza
                                                 )
                                             )
                                         }
@@ -317,18 +410,60 @@ fun FormNuevosRegistrosScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 35.dp),
+                    .padding(top = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Button(
                     modifier = Modifier
                         .size(width = 120.dp, height = 50.dp),
-                    onClick = {},
+                    onClick = {
+                        scope.launch {
+                            onHistorialEvent(
+                                HistorialEvent.OnInsertHistorial(
+                                    historialUiState = HistorialUiState(
+                                        codSesion = codSesion
+                                    ),
+                                    onResult = { codHistorial ->
+                                        listaEjercicios.forEach { ejercicio ->
+                                            for (serie in 1..ejercicio.serie) {
+                                                val key = "${ejercicio.id}-$serie"
+                                                val peso = inputsPeso[key]?.toFloatOrNull() ?: 0f
+                                                val reps = inputsReps[key] ?: ""
+
+                                                val registro = RegistroUiState(
+                                                    codHistorial = codHistorial,
+                                                    codEjercicio = ejercicio.id,
+                                                    nombreEjercicio = ejercicio.nombre,
+                                                    serie = serie,
+                                                    peso = peso,
+                                                    repeticiones = reps
+                                                )
+                                                onRegistrosEvent(
+                                                    RegistrosEvent.OnInsertRegistro(registroUiState = registro)
+                                                )
+                                            }
+                                        }
+                                        onHistorialEvent(HistorialEvent.OnGetHistorial)
+                                        onRegistrosEvent(RegistrosEvent.OnGetSesionById(null))
+                                        onIrAtras()
+                                        scope.launch {
+                                            snackbarMensaje(
+                                                snackbarHostState = snackbarHostState,
+                                                mensaje = "Registros guardados correctamente"
+                                            )
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Cereza,
-                        contentColor = Color.White
+                        contentColor = Color.White,
+                        disabledContainerColor = CerezaDeshabilitado,
+                        disabledContentColor = Color.White.copy(alpha = 0.6f)
                     ),
-                    enabled = true
+                    enabled = todosCamposRellenos
                 ) {
                     Text(
                         text = "Guardar",
@@ -340,7 +475,6 @@ fun FormNuevosRegistrosScreen(
                 }
             }
         }
-
     }
 }
 
@@ -354,7 +488,7 @@ fun FormNuevosRegistrosScreenPreview() {
         listaEjercicios = listOf(
             EjercicioUiState(
                 id = 1,
-                nombre = "Ejercicio 1",
+                nombre = "Ejercicio con nombre largo",
                 notas = "Descripción del ejercicio 1",
                 codSesion = 1,
                 orden = 1,
@@ -376,6 +510,10 @@ fun FormNuevosRegistrosScreenPreview() {
                 orden = 3,
                 serie = 1
             )
-        )
+        ),
+        onRegistrosEvent = {},
+        onHistorialEvent = {},
+        codSesion = 1,
+        ultimosRegistros = mapOf()
     )
 }

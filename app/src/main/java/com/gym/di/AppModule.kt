@@ -3,14 +3,17 @@ package com.gym.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.gym.data.retrofit.services.EjerciciosService
+import com.gym.data.retrofit.services.HistoricalService
 import com.gym.data.retrofit.services.RegistrosService
 import com.gym.data.retrofit.services.SesionesService
 import com.gym.data.room.gym.sesiones.SesionDao
 import com.gym.models.repositorios.SesionRepository
 import com.gym.data.room.GymBD
 import com.gym.data.room.gym.ejercicios.EjercicioDao
+import com.gym.data.room.gym.historial.HistorialDao
 import com.gym.data.room.gym.registros.RegistroDao
 import com.gym.models.repositorios.EjercicioRepository
+import com.gym.models.repositorios.HistorialRepository
 import com.gym.models.repositorios.RegistrosRepository
 import dagger.Module
 import dagger.Provides
@@ -46,6 +49,11 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideHistorialDao(gymBD: GymBD): HistorialDao =
+        gymBD.historialDao()
+
+    @Provides
+    @Singleton
     fun provideRegistroDao(gymBD: GymBD): RegistroDao =
         gymBD.registroDao()
 
@@ -60,6 +68,12 @@ class AppModule {
     fun provideEjercicioRepositorio(
         ejercicioDao: EjercicioDao
     ): EjercicioRepository = EjercicioRepository(ejercicioDao)
+
+    @Provides
+    @Singleton
+    fun provideHistorialRepositorio(
+        historialDao: HistorialDao
+    ): HistorialRepository = HistorialRepository(historialDao)
 
     @Provides
     @Singleton
@@ -88,7 +102,7 @@ class AppModule {
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl("http://pc-ainara/gym/")
+        .baseUrl("http://192.168.0.101/gym/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -103,6 +117,12 @@ class AppModule {
     fun provideEjerciciosService(
         retrofit: Retrofit
     ) : EjerciciosService = retrofit.create(EjerciciosService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHistorialService(
+        retrofit: Retrofit
+    ) : HistoricalService = retrofit.create(HistoricalService::class.java)
 
     @Provides
     @Singleton

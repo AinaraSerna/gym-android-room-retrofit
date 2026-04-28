@@ -6,6 +6,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,16 +17,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.gym.data.room.gym.historial.HistorialConNombreSesionDTO
 import com.gym.ui.features.ejercicios.EjercicioEvent
+import com.gym.ui.features.historial.HistorialEvent
 import com.gym.ui.features.registros.RegistrosEvent
 import com.gym.ui.features.sesiones.SesionEvent
 import com.gym.ui.navigation.ejercicios.DetallesEjercicioRoute
+import com.gym.ui.navigation.historial.FormRegistrosDeHistorial
 import com.gym.ui.navigation.sesiones.DetallesSesionRoute
 import com.gym.ui.theme.RosaFucsia
 
@@ -40,8 +46,22 @@ fun BarraSuperior(
     navController: NavHostController,
     onSesionEvent: (SesionEvent) -> Unit,
     onEjercicioEvent: (EjercicioEvent) -> Unit,
-    onRegistroEvent: (RegistrosEvent) -> Unit
+    onRegistroEvent: (RegistrosEvent) -> Unit,
+    onHistorialEvent: (HistorialEvent) -> Unit,
+    historialSeleccionado: HistorialConNombreSesionDTO?,
+    salirDeForm: Boolean,
+    setMostrarDialogoSalirDeInsercion: (Boolean) -> Unit,
+    setMostrarDialogoFiltrarHistorial: (Boolean) -> Unit,
+    filtrando: Boolean
 ) {
+    LaunchedEffect(key1 = salirDeForm) {
+        if (salirDeForm && iOpcionSeleccionada == 4) {
+            navController.popBackStack()
+            onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+            onRegistroEvent(RegistrosEvent.OnSalirDeForm(salir = false))
+        }
+    }
+
     TopAppBar(
         title = { Text(text = titulo) },
         scrollBehavior = comportamientoAnteScroll,
@@ -58,7 +78,20 @@ fun BarraSuperior(
                 }
 
                 in 4..7 -> {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(
+                        onClick = {
+                            if (iOpcionSeleccionada == 4) {
+                                setMostrarDialogoSalirDeInsercion(true)
+                            } else {
+                                navController.popBackStack()
+                                when (iOpcionSeleccionada) {
+                                    5 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
+                                    6 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                                    7 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                                }
+                            }
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver atrás",
@@ -70,51 +103,89 @@ fun BarraSuperior(
         },
         actions = {
             if (opcionSeleccionada) {
-                when (iOpcionSeleccionada) {
-                    0 -> {
+                IconButton(
+                    modifier = if (iOpcionSeleccionada == 0) Modifier.padding(end = 20.dp) else Modifier,
+                    onClick = {
+                        when (iOpcionSeleccionada) {
+                            0 -> onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
+                            1 -> onHistorialEvent(HistorialEvent.OnGetHistorialById(null))
+                            2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
+                            3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Undo,
+                        contentDescription = "Deshacer",
+                        tint = Color.White
+                    )
+                }
+                if (iOpcionSeleccionada != 0) {
+                    IconButton(
+                        onClick = {
+                            when (iOpcionSeleccionada) {
+                                1 -> {
+                                    val codHistorial = historialSeleccionado?.id
+                                    val codSesion = historialSeleccionado?.codSesion
+                                    if (codHistorial != null && codSesion != null) {
+                                        navController.navigate(
+                                            route = FormRegistrosDeHistorial(
+                                                codHistorial = codHistorial,
+                                                codSesion = codSesion
+                                            )
+                                        )
+                                    }
+                                }
+
+                                2 -> {
+                                    navController.navigate(DetallesEjercicioRoute)
+                                }
+
+                                3 -> {
+                                    navController.navigate(DetallesSesionRoute)
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Editar",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Eliminar",
+                            tint = Color.White
+                        )
+                    }
+                }
+            } else {
+                if (iOpcionSeleccionada == 1) {
+                    if (filtrando) {
                         IconButton(
                             modifier = Modifier.padding(end = 20.dp),
                             onClick = {
-                                onRegistroEvent(RegistrosEvent.OnGetSesionById(null))
-                            }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "Undo",
-                                tint = Color.White
-                            )
-                        }
-                    }
-                    in 2..3 -> {
-                        IconButton(
-                            onClick = {
-                                when (iOpcionSeleccionada) {
-                                    2 -> onEjercicioEvent(EjercicioEvent.OnGetEjercicioById(null))
-                                    3 -> onSesionEvent(SesionEvent.OnGetSesionById(null))
-                                }
+                                onHistorialEvent(HistorialEvent.OnGetHistorial)
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "Deshacer",
+                                imageVector = Icons.Filled.FilterAltOff,
+                                contentDescription = "Filtrar",
                                 tint = Color.White
                             )
                         }
-                        IconButton(onClick = {
-                            when (iOpcionSeleccionada) {
-                                2 -> { navController.navigate(DetallesEjercicioRoute) }
-                                3 -> { navController.navigate(DetallesSesionRoute) }
+                    } else {
+                        IconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = {
+                                setMostrarDialogoFiltrarHistorial(true)
                             }
-                        }) {
+                        ) {
                             Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Editar",
-                                tint = Color.White
-                            )
-                        }
-                        IconButton(onClick = { setMostrarDialogoEliminacion(true) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Eliminar",
+                                imageVector = Icons.Filled.FilterAlt,
+                                contentDescription = "Filtrar",
                                 tint = Color.White
                             )
                         }
@@ -143,6 +214,12 @@ fun BarraSuperiorPreview() {
         navController = NavHostController(context = LocalContext.current),
         onSesionEvent = {},
         onEjercicioEvent = {},
-        onRegistroEvent = {}
+        onRegistroEvent = {},
+        onHistorialEvent = {},
+        historialSeleccionado = null,
+        salirDeForm = false,
+        setMostrarDialogoSalirDeInsercion = {},
+        setMostrarDialogoFiltrarHistorial = {},
+        filtrando = false
     )
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "68e2c174e46903f807fc7c661be6b2c5",
+    "identityHash": "c5cb282a4a068cbc79b7e2a14a28debe",
     "entities": [
       {
         "tableName": "sesiones",
@@ -93,6 +93,60 @@
             "id"
           ]
         },
+        "indices": [
+          {
+            "name": "index_ejercicios_cod_sesion",
+            "unique": false,
+            "columnNames": [
+              "cod_sesion"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ejercicios_cod_sesion` ON `${TABLE_NAME}` (`cod_sesion`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "sesiones",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cod_sesion"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "historial",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cod_sesion` INTEGER, `fecha` INTEGER NOT NULL, FOREIGN KEY(`cod_sesion`) REFERENCES `sesiones`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "codSesion",
+            "columnName": "cod_sesion",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fecha",
+            "columnName": "fecha",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
         "indices": [],
         "foreignKeys": [
           {
@@ -110,11 +164,17 @@
       },
       {
         "tableName": "registros",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cod_ejercicio` INTEGER, `nombre_ejercicio` TEXT NOT NULL, `fecha` INTEGER NOT NULL, `serie` INTEGER NOT NULL, `peso` INTEGER NOT NULL, `repeticiones` INTEGER NOT NULL, FOREIGN KEY(`cod_ejercicio`) REFERENCES `ejercicios`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cod_historial` INTEGER NOT NULL, `cod_ejercicio` INTEGER, `nombre_ejercicio` TEXT NOT NULL, `serie` INTEGER NOT NULL, `peso` REAL NOT NULL, `repeticiones` TEXT NOT NULL, FOREIGN KEY(`cod_historial`) REFERENCES `historial`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`cod_ejercicio`) REFERENCES `ejercicios`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "codHistorial",
+            "columnName": "cod_historial",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -131,12 +191,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "fecha",
-            "columnName": "fecha",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "serie",
             "columnName": "serie",
             "affinity": "INTEGER",
@@ -145,13 +199,13 @@
           {
             "fieldPath": "peso",
             "columnName": "peso",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "repeticiones",
             "columnName": "repeticiones",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -161,8 +215,38 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_registros_cod_historial",
+            "unique": false,
+            "columnNames": [
+              "cod_historial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_registros_cod_historial` ON `${TABLE_NAME}` (`cod_historial`)"
+          },
+          {
+            "name": "index_registros_cod_ejercicio",
+            "unique": false,
+            "columnNames": [
+              "cod_ejercicio"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_registros_cod_ejercicio` ON `${TABLE_NAME}` (`cod_ejercicio`)"
+          }
+        ],
         "foreignKeys": [
+          {
+            "table": "historial",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cod_historial"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
           {
             "table": "ejercicios",
             "onDelete": "SET NULL",
@@ -180,7 +264,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68e2c174e46903f807fc7c661be6b2c5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5cb282a4a068cbc79b7e2a14a28debe')"
     ]
   }
 }

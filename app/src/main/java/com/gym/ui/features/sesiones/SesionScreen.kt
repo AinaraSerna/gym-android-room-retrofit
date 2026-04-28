@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
+import com.gym.ui.theme.CerezaOscuro
 
 @Composable
 fun SesionScreen(
@@ -91,7 +92,7 @@ fun SesionScreen(
                                 Text(
                                     text = sesion.nombre,
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = Cereza,
+                                    color = CerezaOscuro,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -111,7 +112,7 @@ fun SesionScreen(
                                 modifier = Modifier
                                     .padding(end = 12.dp)
                                     .align(Alignment.CenterEnd),
-                                tint = Cereza.copy(alpha = 0.4f)
+                                tint = Cereza.copy(alpha = 0.7f)
                             )
 
                             if(estaSeleccionada){
